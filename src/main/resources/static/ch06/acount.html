@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>银行账户管理系统</title>
+  <script src="../js/jquery-3.7.1.min.js"></script>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 20px;
+      }
+      .container {
+          max-width: 600px;
+          margin: 0 auto;
+      }
+      h1 {
+          text-align: center;
+      }
+      form {
+          margin-top: 20px;
+      }
+      label {
+          display: block;
+          margin-top: 10px;
+      }
+      input, button {
+          width: 100%;
+          padding: 10px;
+          margin-top: 5px;
+          box-sizing: border-box;
+      }
+      button {
+          background-color: #007bff;
+          color: white;
+          border: none;
+          cursor: pointer;
+      }
+      button:hover {
+          background-color: #0056b3;
+      }
+      #result, #transactions {
+          margin-top: 20px;
+          font-size: 1.2em;
+          color: #333;
+      }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>银行账户管理系统</h1>
+  <form id="accountForm">
+    <label for="accountId">账户ID:</label>
+    <input type="text" id="accountId" name="accountId" required>
+
+    <button type="button" onclick="createAccount()">创建账户</button>
+  </form>
+
+  <form id="transactionForm">
+    <label for="transactionAccountId">账户ID:</label>
+    <input type="text" id="transactionAccountId" name="transactionAccountId" required>
+
+    <label for="amount">金额:</label>
+    <input type="number" id="amount" name="amount" step="0.01" required>
+
+    <button type="button" onclick="deposit()">存款</button>
+    <button type="button" onclick="withdraw()">取款</button>
+  </form>
+
+  <div id="result"></div>
+  <div id="transactions"></div>
+  <h4>为什么要使用内部类</h4>
+  <p>封装性: 内部类可以很好地封装其所在类的实现细节。例如，在上面的例子中，Transaction类是Account类的一个成员内部类。它直接访问和操作Account类的私有成员变量。这使得代码更加简洁和可读。</p>
+  <p>逻辑关联性: 内部类可以帮助将逻辑上相关的类组织在一起。这种组织形式使得代码更容易理解和维护。Transaction类只在Account类中使用，因此将它作为Account的内部类是合理的。</p>
+  <p>减少命名冲突: 使用内部类可以减少与其他类的命名冲突。由于内部类是Account类的成员，其他类不能直接访问或创建Transaction对象，从而减少了命名冲突的机会。</p>
+  <h4>不使用内部类的不利之处</h4>
+  <p>代码复杂化: 如果将Transaction类移到外部，它将不能直接访问Account类的私有成员变量。我们必须提供公共的getter和setter方法，这增加了代码的复杂性。</p>
+  <p>降低封装性: 将Transaction类移到外部后，它将变成一个独立的类，可能会被其他不相关的类使用，破坏了封装性。</p>
+  <p>不方便管理: Transaction类的定义与Account类紧密相关，将其移到外部会使得管理这些相关类变得困难。</p>
+  <p>通过这个实例，我们可以看到使用内部类的优点以及不使用内部类的缺点。在实际开发中，合理地使用内部类可以提高代码的可读性、可维护性和封装性。</p>
+</div>
+
+<script>
+    function createAccount() {
+        var accountId = $('#accountId').val();
+        $.ajax({
+            url: '/createAccount',
+            type: 'POST',
+            data: { accountId: accountId },
+            success: function(response) {
+                $('#result').text(response);
+                updateTransactions();
+            },
+            error: function(error) {
+                $('#result').text('处理错误: ' + error.responseText);
+            }
+        });
+    }
+
+    function deposit() {
+        var accountId = $('#transactionAccountId').val();
+        var amount = $('#amount').val();
+        $.ajax({
+            url: '/deposit',
+            type: 'POST',
+            data: { accountId: accountId, amount: amount },
+            success: function(response) {
+                $('#result').text(response);
+                updateTransactions();
+            },
+            error: function(error) {
+                $('#result').text('处理错误: ' + error.responseText);
+            }
+        });
+    }
+
+    function withdraw() {
+        var accountId = $('#transactionAccountId').val();
+        var amount = $('#amount').val();
+        $.ajax({
+            url: '/withdraw',
+            type: 'POST',
+            data: { accountId: accountId, amount: amount },
+            success: function(response) {
+                $('#result').text(response);
+                updateTransactions();
+            },
+            error: function(error) {
+                $('#result').text('处理错误: ' + error.responseText);
+            }
+        });
+    }
+
+    function updateTransactions() {
+        var accountId = $('#transactionAccountId').val();
+        $.ajax({
+            url: '/transactions',
+            type: 'GET',
+            data: { accountId: accountId },
+            success: function(response) {
+                var transactionsHtml = '<h2>交易记录</h2>';
+                if (response) {
+                    response.forEach(function(transaction) {
+                        transactionsHtml += '<p>类型: ' + transaction.type + ', 金额: ' + transaction.amount + '</p>';
+                    });
+                }
+                $('#transactions').html(transactionsHtml);
+            },
+            error: function(error) {
+                $('#transactions').text('获取交易记录错误: ' + error.responseText);
+            }
+        });
+    }
+</script>
+</body>
+</html>

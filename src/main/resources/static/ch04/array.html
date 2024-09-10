@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>一维数组示例</title>
+  <script src="../js/jquery-3.7.1.min.js"></script>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 20px;
+      }
+      .container {
+          max-width: 600px;
+          margin: 0 auto;
+      }
+      h1 {
+          text-align: center;
+      }
+      form {
+          margin-top: 20px;
+      }
+      label {
+          display: block;
+          margin-top: 10px;
+      }
+      input, button {
+          width: 100%;
+          padding: 10px;
+          margin-top: 5px;
+          box-sizing: border-box;
+      }
+      button {
+          background-color: #007bff;
+          color: white;
+          border: none;
+          cursor: pointer;
+      }
+      button:hover {
+          background-color: #0056b3;
+      }
+      #result {
+          margin-top: 20px;
+          font-size: 1.2em;
+          color: #333;
+      }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>一维数组示例</h1>
+  <form id="arrayForm">
+    <label for="numbers">输入逗号分隔的数字列表:</label>
+    <input type="text" id="numbers" name="numbers" required>
+    <button type="submit">处理数组</button>
+  </form>
+  <div id="result"></div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#arrayForm').on('submit', function(event) {
+            event.preventDefault();
+            var numbers = $('#numbers').val();
+
+            $.ajax({
+                url: '/processArray',
+                type: 'POST',
+                data: { numbers: numbers },
+                success: function(data) {
+                    $('#result').text('结果: ' + data);
+                },
+                error: function(error) {
+                    $('#result').text('处理错误: ' + error.responseText);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

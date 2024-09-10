@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>用户注册和登录系统</title>
+  <script src="../js/jquery-3.7.1.min.js"></script>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 20px;
+      }
+      .container {
+          max-width: 600px;
+          margin: 0 auto;
+      }
+      h1 {
+          text-align: center;
+      }
+      form {
+          margin-top: 20px;
+      }
+      label {
+          display: block;
+          margin-top: 10px;
+      }
+      input[type="text"], input[type="password"], button {
+          width: 100%;
+          padding: 10px;
+          margin-top: 5px;
+          box-sizing: border-box;
+      }
+      button {
+          background-color: #007bff;
+          color: white;
+          border: none;
+          cursor: pointer;
+      }
+      button:hover {
+          background-color: #0056b3;
+      }
+      #result {
+          margin-top: 20px;
+          font-size: 1.2em;
+          color: #333;
+      }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>用户注册和登录系统</h1>
+
+  <!-- 添加用户表单 -->
+  <form id="addUserForm">
+    <label for="addUsername">用户名:</label>
+    <input type="text" id="addUsername" name="username" required>
+    <label for="addPassword">密码:</label>
+    <input type="password" id="addPassword" name="password" required>
+    <button type="submit">添加用户</button>
+  </form>
+
+  <!-- 用户登录表单 -->
+  <form id="loginForm">
+    <label for="loginUsername">用户名:</label>
+    <input type="text" id="loginUsername" name="username" required>
+    <label for="loginPassword">密码:</label>
+    <input type="password" id="loginPassword" name="password" required>
+    <button type="submit">登录</button>
+  </form>
+
+  <div id="result"></div>
+  <h4>代码说明</h4>
+  <h4>Java代码</h4>
+  <p>类 User：表示用户对象，包含用户名和密码属性。</p>
+  <p>类UserService：提供用户的添加和登录功能。通过抛出异常来处理错误情况，如用户名为空、密码为空、用户名已存在、用户不存在和密码错误。</p>
+  <p>类 UserController：提供添加用户和用户登录的API，通过捕获异常返回相应的错误信息。</p>
+  <p>try：尝试执行用户添加或登录操作。</p>
+  <p>catch：捕获异常并返回错误信息。</p>
+  <p>finally：执行清理操作或记录日志。</p>
+  <h4>HTML代码</h4>
+  <p>添加用户表单：用户可以输入用户名和密码，并添加用户。</p>
+  <p>用户登录表单：用户可以输入用户名和密码，并登录。</p>
+  <p>结果显示区域：显示操作结果或错误信息。</p>
+  <h4>使用异常处理的优点</h4>
+  <p>提高程序的健壮性：通过捕获和处理异常，可以避免程序在运行时崩溃，提高程序的健壮性和可靠性。</p>
+  <p>简化错误处理逻辑：异常处理将错误处理逻辑与正常业务逻辑分离，使代码更加清晰和易于维护。</p>
+  <p>提供详细的错误信息：通过捕获异常，可以向用户提供详细的错误信息，帮助用户理解和解决问题。</p>
+  <h4>不使用异常处理的缺点</h4>
+  <p>程序容易崩溃：如果不使用异常处理，程序在遇到错误时容易崩溃，导致用户体验差。</p>
+  <p>错误处理分散：没有异常处理，错误处理逻辑可能会分散在代码的各个地方，导致代码混乱和难以维护。</p>
+  <p>缺乏详细的错误信息：没有异常处理，程序在遇到错误时可能只会简单地停止运行，无法向用户提供详细的错误信息。</p>
+  <p>通过合理使用异常处理，可以提高程序的健壮性和可靠性，简化错误处理逻辑，并向用户提供详细的错误信息。</p>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // 添加用户表单提交处理
+        $('#addUserForm').on('submit', function(event) {
+            event.preventDefault(); // 阻止表单默认提交行为
+
+            var userData = {
+                username: $('#addUsername').val(),
+                password: $('#addPassword').val()
+            };
+
+            // 发送AJAX请求添加用户
+            $.ajax({
+                url: '/ch10/addUser',
+                type: 'POST',
+                data: userData,
+                success: function(response) {
+                    $('#result').html(response);
+                },
+                error: function(error) {
+                    $('#result').text('处理错误: ' + error.responseText);
+                }
+            });
+        });
+
+        // 用户登录表单提交处理
+        $('#loginForm').on('submit', function(event) {
+            event.preventDefault(); // 阻止表单默认提交行为
+
+            var loginData = {
+                username: $('#loginUsername').val(),
+                password: $('#loginPassword').val()
+            };
+
+            // 发送AJAX请求登录
+            $.ajax({
+                url: '/ch10/login',
+                type: 'POST',
+                data: loginData,
+                success: function(response) {
+                    $('#result').html(response);
+                },
+                error: function(error) {
+                    $('#result').text('处理错误: ' + error.responseText);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

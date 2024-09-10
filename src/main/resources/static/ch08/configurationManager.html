@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>配置管理案例</title>
+  <script src="../js/jquery-3.7.1.min.js"></script>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 20px;
+      }
+      .container {
+          margin: 0 auto;
+          padding: 20px 100px;
+      }
+      h1 {
+          text-align: center;
+      }
+      form {
+          margin-top: 20px;
+      }
+      label {
+          display: block;
+          margin-top: 10px;
+      }
+      input[type="text"], button {
+          width: 100%;
+          padding: 10px;
+          margin-top: 5px;
+          box-sizing: border-box;
+      }
+      button {
+          background-color: #007bff;
+          color: white;
+          border: none;
+          cursor: pointer;
+      }
+      button:hover {
+          background-color: #0056b3;
+      }
+      #result {
+          margin-top: 20px;
+          font-size: 1.2em;
+          color: #333;
+      }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>配置管理案例</h1>
+  <!-- 获取配置表单 -->
+  <button id="getConfig">获取当前配置</button>
+  <div id="result"></div>
+
+  <!-- 设置配置表单 -->
+  <form id="configForm">
+    <label for="config">新的配置:</label>
+    <input type="text" id="config" name="config" required>
+    <button type="submit">设置配置</button>
+  </form>
+  <h4>代码说明</h4>
+  <h4>Java代码</h4>
+  <p>类 ConfigurationManager：使用单例模式实现配置管理器，确保在整个应用程序中只有一个配置管理器实例。</p>
+  <p>控制器 ConfigurationController：提供获取和设置配置的接口。</p>
+  <h4>HTML代码</h4>
+  <p>获取配置按钮：用户可以点击按钮，获取当前配置。</p>
+  <p>设置配置表单：用户可以输入新的配置，并更新配置。</p>
+  <h4>使用单例模式的优点</h4>
+  <p>单一实例：单例模式确保在整个应用程序中只有一个实例，防止创建多个实例导致的问题。</p>
+  <p>全局访问点：单例模式提供一个全局访问点，使得其他类可以方便地访问唯一的实例。</p>
+  <p>延迟初始化：单例模式可以实现延迟初始化，即在第一次使用时才创建实例，从而提高性能。</p>
+  <h4>不使用单例模式的缺点</h4>
+  <p>多实例问题：如果不使用单例模式，可能会创建多个实例，导致数据不一致和资源浪费。</p>
+  <p>难以维护：多个实例的存在会使得代码的维护变得复杂，难以管理。</p>
+  <p>增加耦合度：没有单一实例，其他类需要管理多个实例的生命周期，增加了代码的耦合度。</p>
+  <p>使用单例模式可以确保系统中的某个类只有一个实例，并提供一个全局访问点，使代码更易于维护和管理。</p>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // 获取当前配置
+        $('#getConfig').on('click', function() {
+            $.ajax({
+                url: '/ch08/getConfig',
+                type: 'GET',
+                success: function(response) {
+                    $('#result').html(response);
+                },
+                error: function(error) {
+                    $('#result').text('处理错误: ' + error.responseText);
+                }
+            });
+        });
+
+        // 设置配置表单提交处理
+        $('#configForm').on('submit', function(event) {
+            event.preventDefault(); // 阻止表单默认提交行为
+
+            var configData = {
+                config: $('#config').val()
+            };
+
+            // 发送AJAX请求设置配置
+            $.ajax({
+                url: '/ch08/setConfig',
+                type: 'POST',
+                data: configData,
+                success: function(response) {
+                    $('#result').html(response);
+                },
+                error: function(error) {
+                    $('#result').text('处理错误: ' + error.responseText);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

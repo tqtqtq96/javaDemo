@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>订单管理案例</title>
+  <script src="../js/jquery-3.7.1.min.js"></script>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 20px;
+      }
+      .container {
+          margin: 0 auto;
+          padding: 20px 100px;
+      }
+      h1 {
+          text-align: center;
+      }
+      .tabs {
+          display: flex;
+          cursor: pointer;
+          margin-top: 20px;
+      }
+      .tabs div {
+          flex: 1;
+          padding: 10px;
+          background-color: #007bff;
+          color: white;
+          text-align: center;
+          border: 1px solid #0056b3;
+      }
+      .tabs div.active {
+          background-color: #0056b3;
+      }
+      .tab-content {
+          display: none;
+          border: 1px solid #0056b3;
+          padding: 20px;
+          margin-top: -1px;
+      }
+      .tab-content.active {
+          display: block;
+      }
+      label {
+          display: block;
+          margin-top: 10px;
+      }
+      input[type="text"], input[type="number"], button {
+          width: 100%;
+          padding: 10px;
+          margin-top: 5px;
+          box-sizing: border-box;
+      }
+      button {
+          background-color: #007bff;
+          color: white;
+          border: none;
+          cursor: pointer;
+      }
+      button:hover {
+          background-color: #0056b3;
+      }
+      #result, #orders, #products {
+          margin-top: 20px;
+          font-size: 1.2em;
+          color: #333;
+      }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>订单管理案例</h1>
+  <div class="tabs">
+    <div class="tab active" data-tab="add-order">添加订单</div>
+    <div class="tab" data-tab="add-product">添加产品</div>
+    <div class="tab" data-tab="get-info">获取信息</div>
+  </div>
+
+  <div class="tab-content active" id="add-order">
+    <!-- 添加订单表单 -->
+    <form id="orderForm">
+      <label for="orderId">订单ID:</label>
+      <input type="text" id="orderId" name="orderId" required>
+      <button type="submit">添加订单</button>
+    </form>
+  </div>
+
+  <div class="tab-content" id="add-product">
+    <!-- 添加产品表单 -->
+    <form id="productForm">
+      <label for="orderIdForProduct">订单ID:</label>
+      <input type="text" id="orderIdForProduct" name="orderIdForProduct" required>
+      <label for="productName">产品名称:</label>
+      <input type="text" id="productName" name="productName" required>
+      <label for="productPrice">产品价格:</label>
+      <input type="number" id="productPrice" name="productPrice" step="0.01" required>
+      <button type="submit">添加产品</button>
+    </form>
+  </div>
+
+  <div class="tab-content" id="get-info">
+    <button id="getOrders">获取所有订单</button>
+    <div id="orders"></div>
+
+    <form id="productsForm">
+      <label for="orderIdForProducts">订单ID:</label>
+      <input type="text" id="orderIdForProducts" name="orderIdForProducts" required>
+      <button type="submit">获取订单的产品</button>
+    </form>
+    <div id="products"></div>
+  </div>
+
+  <div id="result"></div>
+  <h4>代码说明</h4>
+  <h5>Java代码</h5>
+  <p>类 Product：表示一个产品，包含名称和价格。</p>
+  <p>类 Order：表示一个订单，包含订单ID和产品列表。使用聚合关系将产品列表包含在订单类中。</p>
+  <p>控制器 OrderController：提供添加订单、添加产品、获取所有订单和获取订单的产品的接口。</p>
+  <h5>HTML代码</h5>
+  <p>添加订单表单：用户可以输入订单ID，并添加订单。</p>
+  <p>添加产品表单：用户可以选择订单ID，并输入产品名称和价格，添加产品到订单中。</p>
+  <p>获取所有订单按钮：用户可以点击按钮，获取所有订单及其产品数量。</p>
+  <p>获取订单的产品表单：用户可以输入订单ID，获取该订单的所有产品。</p>
+  <h4>为什么使用聚合关系</h4>
+  <p>清晰的类结构：聚合关系将相关的对象组织在一起，形成一个清晰的类结构。例如，订单和产品的关系通过聚合关系得到体现。</p>
+  <p>简化代码：聚合关系简化了对象之间的数据传递，减少了耦合度，提高了代码的可维护性。</p>
+  <p>增强灵活性：聚合关系使得对象可以更灵活地进行扩展和修改，而不需要对整个系统进行重大调整。</p>
+  <h4>不使用聚合关系的缺点</h4>
+  <p>高耦合度：如果不使用聚合关系，我们将不得不在多个类之间传递大量数据，导致代码的耦合度高，难以维护。</p>
+  <p>低可维护性：没有聚合关系，类之间的关系变得模糊，代码的可读性和可维护性下降。</p>
+  <p>数据一致性问题：没有聚合关系，数据的一致性和完整性难以保证，需要额外的代码来管理对象之间的关系。</p>
+  <p>使用聚合关系可以使代码更简洁、清晰和易于维护，提高代码的可扩展性和灵活性。</p>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // 选项卡切换
+        $('.tab').click(function() {
+            $('.tab').removeClass('active');
+            $(this).addClass('active');
+            $('.tab-content').removeClass('active');
+            $('#' + $(this).data('tab')).addClass('active');
+        });
+
+        // 添加订单表单提交处理
+        $('#orderForm').on('submit', function(event) {
+            event.preventDefault(); // 阻止表单默认提交行为
+
+            var orderData = {
+                orderId: $('#orderId').val()
+            };
+
+            // 发送AJAX请求添加订单
+            $.ajax({
+                url: '/ch08/addOrder',
+                type: 'POST',
+                data: orderData,
+                success: function(response) {
+                    $('#result').html(response);
+                },
+                error: function(error) {
+                    $('#result').text('处理错误: ' + error.responseText);
+                }
+            });
+        });
+
+        // 添加产品表单提交处理
+        $('#productForm').on('submit', function(event) {
+            event.preventDefault(); // 阻止表单默认提交行为
+
+            var productData = {
+                orderId: $('#orderIdForProduct').val(),
+                productName: $('#productName').val(),
+                productPrice: $('#productPrice').val()
+            };
+
+            // 发送AJAX请求添加产品
+            $.ajax({
+                url: '/ch08/addProduct',
+                type: 'POST',
+                data: productData,
+                success: function(response) {
+                    $('#result').html(response);
+                },
+                error: function(error) {
+                    $('#result').text('处理错误: ' + error.responseText);
+                }
+            });
+        });
+
+        // 获取所有订单
+        $('#getOrders').on('click', function() {
+            $.ajax({
+                url: '/ch08/orders',
+                type: 'GET',
+                success: function(response) {
+                    var ordersHtml = '所有订单: <br>';
+                    response.forEach(function(order) {
+                        ordersHtml += order.orderId + ' (产品数量: ' + order.products.length + ')<br>';
+                    });
+                    $('#orders').html(ordersHtml);
+                },
+                error: function(error) {
+                    $('#orders').text('获取订单信息错误: ' + error.responseText);
+                }
+            });
+        });
+
+        // 获取订单的产品
+        $('#productsForm').on('submit', function(event) {
+            event.preventDefault(); // 阻止表单默认提交行为
+
+            var orderId = $('#orderIdForProducts').val();
+
+            // 发送AJAX请求获取订单的产品
+            $.ajax({
+                url: '/ch08/orderProducts',
+                type: 'GET',
+                data: { orderId: orderId },
+                success: function(response) {
+                    var productsHtml = '订单: ' + orderId + ' 的产品: <br>';
+                    response.forEach(function(product) {
+                        productsHtml += product.name + ' (价格: ' + product.price + ')<br>';
+                    });
+                    $('#products').html(productsHtml);
+                },
+                error: function(error) {
+                    $('#products').text('获取产品信息错误: ' + error.responseText);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

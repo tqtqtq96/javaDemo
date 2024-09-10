@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>员工管理系统</title>
+  <script src="../js/jquery-3.7.1.min.js"></script>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 20px;
+      }
+      .container {
+          max-width: 600px;
+          margin: 0 auto;
+      }
+      h1 {
+          text-align: center;
+      }
+      form {
+          margin-top: 20px;
+      }
+      label {
+          display: block;
+          margin-top: 10px;
+      }
+      input, button {
+          width: 100%;
+          padding: 10px;
+          margin-top: 5px;
+          box-sizing: border-box;
+      }
+      button {
+          background-color: #007bff;
+          color: white;
+          border: none;
+          cursor: pointer;
+      }
+      button:hover {
+          background-color: #0056b3;
+      }
+      #result, #departments {
+          margin-top: 20px;
+          font-size: 1.2em;
+          color: #333;
+      }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>员工管理系统</h1>
+  <form id="departmentForm">
+    <label for="departmentName">部门名称:</label>
+    <input type="text" id="departmentName" name="departmentName" required>
+    <button type="submit">创建部门</button>
+  </form>
+  <form id="employeeForm" style="display:none;">
+    <label for="employeeDepartment">部门名称:</label>
+    <input type="text" id="employeeDepartment" name="departmentName" required>
+
+    <label for="employeeName">员工姓名:</label>
+    <input type="text" id="employeeName" name="name" required>
+
+    <label for="employeeSalary">员工工资:</label>
+    <input type="number" id="employeeSalary" name="salary" step="0.01" required>
+    <button type="submit">添加员工</button>
+  </form>
+  <div id="result"></div>
+  <div id="departments"></div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#departmentForm').on('submit', function(event) {
+            event.preventDefault();
+            $.ajax({
+                url: '/createDepartment',
+                type: 'POST',
+                data: { departmentName: $('#departmentName').val() },
+                success: function(response) {
+                    $('#result').text(response);
+                    updateDepartments();
+                    $('#employeeForm').show();
+                },
+                error: function(error) {
+                    $('#result').text('处理错误: ' + error.responseText);
+                }
+            });
+        });
+
+        $('#employeeForm').on('submit', function(event) {
+            event.preventDefault();
+            $.ajax({
+                url: '/addEmployee',
+                type: 'POST',
+                data: {
+                    departmentName: $('#employeeDepartment').val(),
+                    name: $('#employeeName').val(),
+                    salary: $('#employeeSalary').val()
+                },
+                success: function(response) {
+                    $('#result').text(response);
+                    updateDepartments();
+                },
+                error: function(error) {
+                    $('#result').text('处理错误: ' + error.responseText);
+                }
+            });
+        });
+
+        function updateDepartments() {
+            $.ajax({
+                url: '/employees',
+                type: 'GET',
+                success: function(response) {
+                    var departmentsHtml = '<h2>所有部门</h2>';
+                    $.each(response, function(departmentName, department) {
+                        departmentsHtml += '<h3>' + departmentName + '</h3>';
+                        department.employees.forEach(function(employee) {
+                            departmentsHtml += '<p>员工ID: ' + employee.id + ', 姓名: ' + employee.name + ', 工资: ' + employee.salary + '</p>';
+                        });
+                    });
+                    $('#departments').html(departmentsHtml);
+                },
+                error: function(error) {
+                    $('#departments').text('获取部门信息错误: ' + error.responseText);
+                }
+            });
+        }
+
+        // 初始化获取所有部门和员工
+        updateDepartments();
+    });
+</script>
+</body>
+</html>

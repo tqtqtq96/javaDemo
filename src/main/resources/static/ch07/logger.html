@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>日志记录系统</title>
+  <script src="../js/jquery-3.7.1.min.js"></script>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 20px;
+      }
+      .container {
+          max-width: 600px;
+          margin: 0 auto;
+      }
+      h1 {
+          text-align: center;
+      }
+      form {
+          margin-top: 20px;
+      }
+      label {
+          display: block;
+          margin-top: 10px;
+      }
+      input[type="text"], input[type="number"], button {
+          width: 100%;
+          padding: 10px;
+          margin-top: 5px;
+          box-sizing: border-box;
+      }
+      .radio-group {
+          margin-top: 5px;
+      }
+      .radio-group label {
+          display: inline-block;
+          margin-right: 10px;
+      }
+      button {
+          background-color: #007bff;
+          color: white;
+          border: none;
+          cursor: pointer;
+      }
+      button:hover {
+          background-color: #0056b3;
+      }
+      #result {
+          margin-top: 20px;
+          font-size: 1.2em;
+          color: #333;
+      }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>日志记录系统</h1>
+  <!-- 添加日志记录器表单 -->
+  <form id="loggerForm">
+    <label for="type">日志记录器类型:</label>
+    <div class="radio-group">
+      <label>
+        <input type="radio" name="type" value="file" required> 文件日志记录器
+      </label>
+      <label>
+        <input type="radio" name="type" value="console"> 控制台日志记录器
+      </label>
+      <label>
+        <input type="radio" name="type" value="anonymous"> 匿名内部类日志记录器
+      </label>
+      <label>
+        <input type="radio" name="type" value="lambda"> Lambda日志记录器
+      </label>
+    </div>
+    <label for="fileName">文件名（仅文件日志记录器需要）:</label>
+    <input type="text" id="fileName" name="fileName">
+    <button type="submit">添加日志记录器</button>
+  </form>
+  <div id="result"></div>
+
+  <!-- 记录日志表单 -->
+  <form id="logForm">
+    <label for="message">日志消息:</label>
+    <input type="text" id="message" name="message" required>
+    <button type="submit">记录日志</button>
+  </form>
+  <h4>为什么使用匿名内部类和Lambda表达式</h4>
+  <p>匿名内部类：匿名内部类允许我们在创建对象时定义一个类的实现。它通常用于简化代码，避免创建不必要的类。</p>
+  <p>Lambda表达式：Lambda表达式是Java 8引入的一个特性，它简化了只有一个抽象方法的接口（函数式接口）的实现。使用Lambda表达式可以使代码更加简洁和易读。</p>
+  <h4>不使用匿名内部类和Lambda表达式的缺点</h4>
+  <p>代码冗长：如果不使用匿名内部类，我们需要定义一个独立的类来实现接口，这会增加代码的冗长和复杂度。</p>
+  <p>缺乏灵活性：不使用Lambda表达式，我们需要使用传统的匿名内部类，这使得代码变得冗长，不够简洁。</p>
+  <p>使用匿名内部类和Lambda表达式可以使代码更简洁、灵活和易于维护。</p>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // 添加日志记录器表单提交处理
+        $('#loggerForm').on('submit', function(event) {
+            event.preventDefault(); // 阻止表单默认提交行为
+
+            var loggerData = {
+                type: $('input[name="type"]:checked').val(), // 获取选中的日志记录器类型
+                fileName: $('#fileName').val()
+            };
+
+            // 发送AJAX请求添加日志记录器
+            $.ajax({
+                url: '/addLogger',
+                type: 'POST',
+                data: loggerData,
+                success: function(response) {
+                    $('#result').html(response);
+                },
+                error: function(error) {
+                    $('#result').text('处理错误: ' + error.responseText);
+                }
+            });
+        });
+
+        // 记录日志表单提交处理
+        $('#logForm').on('submit', function(event) {
+            event.preventDefault(); // 阻止表单默认提交行为
+
+            var logData = {
+                message: $('#message').val() // 获取日志消息
+            };
+
+            // 发送AJAX请求记录日志
+            $.ajax({
+                url: '/log',
+                type: 'POST',
+                data: logData,
+                success: function(response) {
+                    $('#result').html(response);
+                },
+                error: function(error) {
+                    $('#result').text('处理错误: ' + error.responseText);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

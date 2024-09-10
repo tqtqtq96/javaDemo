@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>通用排序系统</title>
+  <script src="../js/jquery-3.7.1.min.js"></script>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 20px;
+      }
+      .container {
+          max-width: 600px;
+          margin: 0 auto;
+      }
+      h1 {
+          text-align: center;
+      }
+      form {
+          margin-top: 20px;
+      }
+      label {
+          display: block;
+          margin-top: 10px;
+      }
+      input[type="text"], button {
+          width: 100%;
+          padding: 10px;
+          margin-top: 5px;
+          box-sizing: border-box;
+      }
+      button {
+          background-color: #007bff;
+          color: white;
+          border: none;
+          cursor: pointer;
+      }
+      button:hover {
+          background-color: #0056b3;
+      }
+      #result, #sortedProducts, #sortedProductsByName {
+          margin-top: 20px;
+          font-size: 1.2em;
+          color: #333;
+      }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>通用排序系统</h1>
+
+  <!-- 添加产品表单 -->
+  <form id="productForm">
+    <label for="productId">产品ID:</label>
+    <input type="text" id="productId" name="productId" required>
+    <label for="name">产品名称:</label>
+    <input type="text" id="name" name="name" required>
+    <button type="submit">添加产品</button>
+  </form>
+
+  <div id="result"></div>
+  <button id="sortById">按产品ID排序</button>
+  <button id="sortByName">按名称排序</button>
+  <div id="sortedProducts"></div>
+  <div id="sortedProductsByName"></div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // 处理产品表单提交
+        $('#productForm').on('submit', function(event) {
+            event.preventDefault(); // 阻止表单默认提交行为
+
+            var productData = {
+                productId: $('#productId').val(),
+                name: $('#name').val()
+            };
+
+            // 发送AJAX请求添加产品
+            $.ajax({
+                url: '/ch11/e03/addProduct',
+                type: 'POST',
+                data: productData,
+                success: function(response) {
+                    $('#result').html(response);
+                },
+                error: function(error) {
+                    $('#result').text('处理错误: ' + error.responseText);
+                }
+            });
+        });
+
+        // 获取按产品ID排序的产品列表
+        $('#sortById').on('click', function() {
+            $.ajax({
+                url: '/ch11/e03/getSortedProducts',
+                type: 'GET',
+                success: function(response) {
+                    var sortedHtml = '<h2>按产品ID排序的产品</h2>';
+                    response.forEach(function(product) {
+                        sortedHtml += '<p>' + product.productId + ' - ' + product.name + '</p>';
+                    });
+                    $('#sortedProducts').html(sortedHtml);
+                },
+                error: function(error) {
+                    $('#sortedProducts').text('获取排序产品信息错误: ' + error.responseText);
+                }
+            });
+        });
+
+        // 获取按名称排序的产品列表
+        $('#sortByName').on('click', function() {
+            $.ajax({
+                url: '/ch11/e03/getSortedProductsByName',
+                type: 'GET',
+                success: function(response) {
+                    var sortedHtml = '<h2>按名称排序的产品</h2>';
+                    response.forEach(function(product) {
+                        sortedHtml += '<p>' + product.productId + ' - ' + product.name + '</p>';
+                    });
+                    $('#sortedProductsByName').html(sortedHtml);
+                },
+                error: function(error) {
+                    $('#sortedProductsByName').text('获取排序产品信息错误: ' + error.responseText);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

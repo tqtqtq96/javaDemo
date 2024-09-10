@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>支付管理系统</title>
+  <script src="../js/jquery-3.7.1.min.js"></script>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 20px 100px;
+      }
+      .container {
+          margin: 0 auto;
+      }
+      h1 {
+          text-align: center;
+      }
+      form {
+          margin-top: 20px;
+      }
+      label {
+          display: block;
+          margin-top: 10px;
+      }
+      input[type="text"], input[type="number"], button {
+          width: 100%;
+          padding: 10px;
+          margin-top: 5px;
+          box-sizing: border-box;
+      }
+      .radio-group {
+          margin-top: 5px;
+      }
+      .radio-group label {
+          display: inline-block;
+          margin-right: 10px;
+      }
+      button {
+          background-color: #007bff;
+          color: white;
+          border: none;
+          cursor: pointer;
+      }
+      button:hover {
+          background-color: #0056b3;
+      }
+      #result, #totalPayments {
+          margin-top: 20px;
+          font-size: 1.2em;
+          color: #333;
+      }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>支付管理案例</h1>
+  <!-- 支付表单 -->
+  <form id="paymentForm">
+    <label for="type">支付类型:</label>
+    <div class="radio-group">
+      <label>
+        <input type="radio" name="type" value="credit" required> 信用卡
+      </label>
+      <label>
+        <input type="radio" name="type" value="wechat"> 微信支付
+      </label>
+    </div>
+
+    <label for="paymentId">支付ID:</label>
+    <input type="text" id="paymentId" name="paymentId" required>
+
+    <label for="amount">金额:</label>
+    <input type="number" id="amount" name="amount" step="0.01" required>
+
+    <label for="id">信用卡号/微信ID:</label>
+    <input type="text" id="id" name="id" required>
+
+    <button type="submit">创建支付</button>
+  </form>
+  <div id="result"></div>
+  <div id="totalPayments"></div>
+  <h4>为什么使用抽象类</h4>
+  <p>代码复用：抽象类包含了通用的方法实现，子类可以直接使用这些方法而无需重复代码。</p>
+  <p>组织性：通过抽象类，可以更清晰地组织代码结构，明确哪些方法是通用的，哪些方法需要具体实现。</p>
+  <p>多态性：使用抽象类可以实现多态，在代码中可以用父类（抽象类）来引用子类对象，简化代码的复杂性。</p>
+  <h4>不使用抽象类的缺点</h4>
+  <p>代码重复：如果不使用抽象类，每个子类都需要重复实现通用的方法，增加了代码量和维护成本。</p>
+  <p>缺乏组织性：没有抽象类来提供统一的接口和实现，不同的子类之间可能会有不一致的实现，降低代码的可读性和可维护性。</p>
+  <p>难以扩展：没有抽象类，添加新的支付方式时需要修改多处代码，增加了出错的风险。</p>
+    <h4>应用场景</h4>
+  <p>支付管理系统需要支持多种支付方式（例如信用卡支付和微信支付），使用抽象类可以定义通用的支付处理逻辑，而具体的支付方式则由子类实现，确保代码的简洁性和可扩展性。</p>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // 表单提交处理
+        $('#paymentForm').on('submit', function(event) {
+            event.preventDefault();
+
+            var paymentData = {
+                type: $('input[name="type"]:checked').val(), // 获取选中的支付类型
+                paymentId: $('#paymentId').val(),
+                amount: $('#amount').val(),
+                id: $('#id').val()
+            };
+
+            // 发送AJAX请求创建支付
+            $.ajax({
+                url: '/createPayment',
+                type: 'POST',
+                data: paymentData,
+                success: function(response) {
+                    $('#result').html(response);
+                    updateTotalPayments();
+                },
+                error: function(error) {
+                    $('#result').text('处理错误: ' + error.responseText);
+                }
+            });
+        });
+
+        // 更新总支付金额
+        function updateTotalPayments() {
+            $.ajax({
+                url: '/totalPayments',
+                type: 'GET',
+                success: function(response) {
+                    $('#totalPayments').html('总支付金额: ' + response);
+                },
+                error: function(error) {
+                    $('#totalPayments').text('获取总支付金额错误: ' + error.responseText);
+                }
+            });
+        }
+
+        // 页面初始化时更新总支付金额
+        updateTotalPayments();
+    });
+</script>
+</body>
+</html>

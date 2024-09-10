@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>用户注册</title>
+  <script src="../js/jquery-3.7.1.min.js"></script>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 20px;
+      }
+      .container {
+          max-width: 600px;
+          margin: 0 auto;
+      }
+      h1 {
+          text-align: center;
+      }
+      form {
+          margin-top: 20px;
+      }
+      label {
+          display: block;
+          margin-top: 10px;
+      }
+      input, button {
+          width: 100%;
+          padding: 10px;
+          margin-top: 5px;
+          box-sizing: border-box;
+      }
+      button {
+          background-color: #007bff;
+          color: white;
+          border: none;
+          cursor: pointer;
+      }
+      button:hover {
+          background-color: #0056b3;
+      }
+      #result {
+          margin-top: 20px;
+          font-size: 1.2em;
+          color: #333;
+      }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>用户注册</h1>
+  <form id="registrationForm">
+    <label for="username">用户名:</label>
+    <input type="text" id="username" name="username" required>
+
+    <label for="password">密码:</label>
+    <input type="password" id="password" name="password" required>
+
+    <label for="email">电子邮件:</label>
+    <input type="email" id="email" name="email" required>
+
+    <button type="submit">注册</button>
+  </form>
+  <div id="result"></div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#registrationForm').on('submit', function(event) {
+            event.preventDefault(); // 阻止表单默认提交行为
+
+            var userData = {
+                username: $('#username').val(),
+                password: $('#password').val(),
+                email: $('#email').val()
+            };
+
+            $.ajax({
+                url: '/register',
+                type: 'POST',
+                data: userData,
+                success: function(response) {
+                    $('#result').html(response);
+                },
+                error: function(error) {
+                    $('#result').text('处理错误: ' + error.responseText);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

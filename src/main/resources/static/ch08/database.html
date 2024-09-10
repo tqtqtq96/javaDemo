@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>数据库连接系统</title>
+  <script src="../js/jquery-3.7.1.min.js"></script>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 20px;
+      }
+      .container {
+          max-width: 700px;
+          margin: 0 auto;
+      }
+      h1 {
+          text-align: center;
+      }
+      form {
+          margin-top: 20px;
+      }
+      label {
+          display: block;
+          margin-top: 10px;
+      }
+      select, button {
+          width: 100%;
+          padding: 10px;
+          margin-top: 5px;
+          box-sizing: border-box;
+      }
+      button {
+          background-color: #007bff;
+          color: white;
+          border: none;
+          cursor: pointer;
+      }
+      button:hover {
+          background-color: #0056b3;
+      }
+      #result {
+          margin-top: 20px;
+          font-size: 1.2em;
+          color: #333;
+      }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>数据库连接系统</h1>
+  <!-- 创建数据库连接表单 -->
+  <form id="connectionForm">
+    <label for="dbType">选择数据库类型:</label>
+    <select id="dbType" name="dbType">
+      <option value="mysql">MySQL</option>
+      <option value="postgresql">PostgreSQL</option>
+    </select>
+    <button type="submit">连接数据库</button>
+  </form>
+  <div id="result"></div>
+  <h4>代码说明</h4>
+  <h4>Java代码</h4>
+  <p>接口 DatabaseConnection：定义数据库连接的接口，包含一个connect方法。</p>
+  <p>类 MySQLConnection 和 类 PostgreSQLConnection：实现数据库连接接口，分别表示MySQL连接和PostgreSQL连接。</p>
+  <p>类 DatabaseConnectionFactory：使用简单工厂模式创建数据库连接，根据传入的类型返回相应的数据库连接对象。</p>
+  <p>控制器 DatabaseController：提供创建数据库连接并返回连接信息的接口。</p>
+  <p>HTML代码</p>
+  <p>选择数据库类型表单：用户可以选择数据库类型，并尝试连接数据库。</p>
+  <p>结果显示区域：显示数据库连接的结果。</p>
+  <h4>使用简单工厂模式的优点</h4>
+  <p>减少代码重复：简单工厂模式将对象创建的逻辑集中在一个地方，减少了代码重复。</p>
+  <p>提高代码可维护性：对象创建逻辑集中在一个地方，修改对象创建方式时只需要修改工厂类，其他代码无需改变。</p>
+  <p>增强代码灵活性：通过传入不同的参数，可以创建不同的对象，提高了代码的灵活性。</p>
+  <h4>不使用简单工厂模式的缺点</h4>
+  <p>代码重复：如果不使用简单工厂模式，我们需要在多个地方编写相同的对象创建代码，导致代码重复。</p>
+  <p>难以维护：对象创建逻辑分散在多个地方，修改对象创建方式时需要修改多处代码，增加了维护难度。</p>
+  <p>耦合度高：对象创建逻辑分散在多个地方，导致代码的耦合度高，难以管理。</p>
+  <p>使用简单工厂模式可以使代码更简洁、清晰和易于维护，提高代码的可扩展性和灵活性。</p>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // 创建数据库连接表单提交处理
+        $('#connectionForm').on('submit', function(event) {
+            event.preventDefault(); // 阻止表单默认提交行为
+
+            var connectionData = {
+                type: $('#dbType').val()
+            };
+
+            // 发送AJAX请求连接数据库
+            $.ajax({
+                url: '/ch08/connect',
+                type: 'POST',
+                data: connectionData,
+                success: function(response) {
+                    $('#result').html(response);
+                },
+                error: function(error) {
+                    $('#result').text('处理错误: ' + error.responseText);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

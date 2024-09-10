@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>图书管理系统</title>
+  <script src="../js/jquery-3.7.1.min.js"></script>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 20px;
+      }
+      .container {
+          max-width: 600px;
+          margin: 0 auto;
+      }
+      h1 {
+          text-align: center;
+      }
+      .tabs {
+          display: flex;
+          margin-top: 20px;
+          cursor: pointer;
+      }
+      .tab {
+          flex: 1;
+          padding: 10px;
+          text-align: center;
+          background-color: #f1f1f1;
+          border: 1px solid #ccc;
+      }
+      .tab.active {
+          background-color: #007bff;
+          color: white;
+      }
+      .tab-content {
+          display: none;
+          margin-top: 20px;
+      }
+      .tab-content.active {
+          display: block;
+      }
+      form {
+          margin-top: 20px;
+      }
+      label {
+          display: block;
+          margin-top: 10px;
+      }
+      input, button {
+          width: 100%;
+          padding: 10px;
+          margin-top: 5px;
+          box-sizing: border-box;
+      }
+      button {
+          background-color: #007bff;
+          color: white;
+          border: none;
+          cursor: pointer;
+      }
+      button:hover {
+          background-color: #0056b3;
+      }
+      #result, #books {
+          margin-top: 20px;
+          font-size: 1.2em;
+          color: #333;
+      }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>图书管理系统</h1>
+  <div class="tabs">
+    <div class="tab active" data-tab="ebook">创建电子书</div>
+    <div class="tab" data-tab="printedBook">创建纸质书</div>
+  </div>
+  <div id="ebook" class="tab-content active">
+    <form id="ebookForm">
+      <label for="ebookTitle">标题:</label>
+      <input type="text" id="ebookTitle" name="title" required>
+
+      <label for="ebookAuthor">作者:</label>
+      <input type="text" id="ebookAuthor" name="author" required>
+
+      <label for="ebookPrice">价格:</label>
+      <input type="number" id="ebookPrice" name="price" step="0.01" required>
+
+      <label for="ebookFileSize">文件大小 (MB):</label>
+      <input type="number" id="ebookFileSize" name="fileSize" step="0.01" required>
+
+      <button type="button" id="createEBookButton">创建电子书</button>
+    </form>
+  </div>
+  <div id="printedBook" class="tab-content">
+    <form id="printedBookForm">
+      <label for="printedBookTitle">标题:</label>
+      <input type="text" id="printedBookTitle" name="title" required>
+
+      <label for="printedBookAuthor">作者:</label>
+      <input type="text" id="printedBookAuthor" name="author" required>
+
+      <label for="printedBookPrice">价格:</label>
+      <input type="number" id="printedBookPrice" name="price" step="0.01" required>
+
+      <label for="printedBookShippingWeight">运输重量 (kg):</label>
+      <input type="number" id="printedBookShippingWeight" name="shippingWeight" step="0.01" required>
+
+      <button type="button" id="createPrintedBookButton">创建纸质书</button>
+    </form>
+  </div>
+
+  <div id="result"></div>
+  <div id="books"></div>
+  <h4>为什么要使用继承</h4>
+  <p>代码复用: 继承使得子类可以复用父类的属性和方法，避免代码重复。例如，EBook和PrintedBook类复用了Book类中的属性和方法，减少了代码冗余。</p>
+  <p>扩展性: 继承使得代码易于扩展。我们可以在不修改父类代码的情况下，通过创建子类来扩展新的功能。例如，我们可以轻松添加其他类型的图书，而不需要修改现有的Book类。</p>
+  <p>多态性: 继承支持多态性，使得我们可以用父类的引用来指向子类的对象，从而实现灵活的代码设计。例如，在BookController类中，books列表可以存储不同类型的图书对象（EBook和PrintedBook）。</p>
+  <h4>不使用继承的问题</h4>
+  <p>如果不使用继承，我们需要为每种类型的图书分别定义属性和方法，这样会导致代码重复，增加了维护的难度。此外，扩展新的图书类型时需要修改多个地方，增加了代码出错的风险。</p>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('.tab').click(function() {
+            var tabId = $(this).data('tab');
+            $('.tab').removeClass('active');
+            $(this).addClass('active');
+            $('.tab-content').removeClass('active');
+            $('#' + tabId).addClass('active');
+        });
+
+        $('#createEBookButton').click(function() {
+            createEBook();
+        });
+
+        $('#createPrintedBookButton').click(function() {
+            createPrintedBook();
+        });
+
+        function createEBook() {
+            var ebookData = {
+                title: $('#ebookTitle').val(),
+                author: $('#ebookAuthor').val(),
+                price: $('#ebookPrice').val(),
+                fileSize: $('#ebookFileSize').val()
+            };
+
+            $.ajax({
+                url: '/createEBook',
+                type: 'POST',
+                data: ebookData,
+                success: function(response) {
+                    $('#result').text(response);
+                    updateBooks();
+                },
+                error: function(error) {
+                    $('#result').text('处理错误: ' + error.responseText);
+                }
+            });
+        }
+
+        function createPrintedBook() {
+            var printedBookData = {
+                title: $('#printedBookTitle').val(),
+                author: $('#printedBookAuthor').val(),
+                price: $('#printedBookPrice').val(),
+                shippingWeight: $('#printedBookShippingWeight').val()
+            };
+
+            $.ajax({
+                url: '/createPrintedBook',
+                type: 'POST',
+                data: printedBookData,
+                success: function(response) {
+                    $('#result').text(response);
+                    updateBooks();
+                },
+                error: function(error) {
+                    $('#result').text('处理错误: ' + error.responseText);
+                }
+            });
+        }
+
+        function updateBooks() {
+            $.ajax({
+                url: '/books',
+                type: 'GET',
+                success: function(response) {
+                    var booksHtml = '<h2>所有图书</h2>';
+                    response.forEach(function(book) {
+                        booksHtml += '<p>' + book.title + ' by ' + book.author + ', Price: ' + book.price + ' - ' + (book.fileSize ? ('File Size: ' + book.fileSize + ' MB') : ('Shipping Weight: ' + book.shippingWeight + ' kg')) + '</p>';
+                    });
+                    $('#books').html(booksHtml);
+                },
+                error: function(error) {
+                    $('#books').text('获取图书信息错误: ' + error.responseText);
+                }
+            });
+        }
+
+        // 初始化获取所有图书
+        updateBooks();
+    });
+</script>
+</body>
+</html>

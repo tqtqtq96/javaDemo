@@ -1,0 +1,120 @@
+body {
+    display: flex;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+}
+.sidebar {
+    width: 250px;
+    background-color: #2C3E50;
+    color: #fff;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+    transition: width 0.3s;
+}
+.sidebar.hidden {
+    width: 0;
+}
+.sidebar .logo {
+    text-align: center;
+    padding: 20px;
+    font-size: 1.5em;
+}
+.sidebar .nav-item {
+    width: 100%;
+}
+.sidebar .nav-item > a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 20px;
+    cursor: pointer;
+    text-decoration: none;
+    color: #fff;
+    background-color: #34495E;
+}
+.sidebar .nav-item > a .fas {
+    margin-right: 10px;
+}
+.sidebar .nav-item .nav-submenu {
+    display: none;
+    background-color: #1A252F;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+.sidebar .nav-item .nav-submenu .nav-subitem {
+    padding: 18px 30px;
+    color: #fff;
+    cursor: pointer;
+}
+.sidebar .nav-item .nav-submenu .nav-subitem a {
+    color: #fff;
+    text-decoration: none;
+}
+.sidebar .nav-item .nav-submenu .nav-subitem a:hover {
+    color: #fff;
+}
+.sidebar .nav-item .nav-submenu .nav-subitem.active,
+.sidebar .nav-item .nav-submenu .nav-subitem:hover {
+    background-color: #0093ff;
+    color: #fff;
+}
+.sidebar .nav-item.active > a {
+    background-color: #34495E;
+}
+.sidebar .nav-item.active .nav-submenu {
+    display: block;
+}
+.main-content {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    transition: margin-left 0.3s, width 0.3s;
+    background: #f0f2f6;
+}
+.main-content.hidden {
+    margin-left: 0;
+    width: 100%;
+}
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: #fff;
+    align-items: center;
+}
+
+.main-header .toggle-btn {
+    font-size: 1.5em;
+    cursor: pointer;
+    margin-right: 20px; /* 添加右边距 */
+}
+
+.main-header .breadcrumb {
+    flex-grow: 1; /* 使面包屑占据剩余空间 */
+    margin-left: 20px; /* 添加左边距 */
+}
+
+.main-header .right-icons {
+    display: flex; /* 确保图标在同一行 */
+    align-items: center;
+}
+
+.main-header .right-icons .fas {
+    margin-left: 20px;
+    cursor: pointer;
+}
+
+.main-body {
+    padding: 5px 0;
+    height: calc(100vh - 60px);
+}
+.main-body iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}

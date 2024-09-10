@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>订单处理系统</title>
+  <script src="../js/jquery-3.7.1.min.js"></script>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 20px;
+      }
+      .container {
+          max-width: 600px;
+          margin: 0 auto;
+      }
+      h1 {
+          text-align: center;
+      }
+      form {
+          margin-top: 20px;
+      }
+      label {
+          display: block;
+          margin-top: 10px;
+      }
+      input[type="text"], input[type="number"], button {
+          width: 100%;
+          padding: 10px;
+          margin-top: 5px;
+          box-sizing: border-box;
+      }
+      button {
+          background-color: #007bff;
+          color: white;
+          border: none;
+          cursor: pointer;
+      }
+      button:hover {
+          background-color: #0056b3;
+      }
+      #result {
+          margin-top: 20px;
+          font-size: 1.2em;
+          color: #333;
+      }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>订单处理系统</h1>
+
+  <!-- 创建订单表单 -->
+  <form id="orderForm">
+    <label for="orderId">订单ID:</label>
+    <input type="text" id="orderId" name="orderId" required>
+    <label for="amount">订单金额:</label>
+    <input type="number" id="amount" name="amount" step="0.01" required>
+    <button type="submit">处理订单</button>
+  </form>
+
+  <div id="result"></div>
+  <h4>代码说明</h4>
+  <h4>Java代码</h4>
+  <p>类 OrderProcessingException：自定义异常类，用于处理订单处理中的各种异常情况。</p>
+  <p>类 Order：订单类，包含订单ID和金额。</p>
+  <p>类 OrderService：订单服务类，提供订单处理功能。在 processOrder 方法中使用 throws 声明可能抛出的异常，并在遇到金额小于等于0时使用throw 抛出异常。</p>
+  <p>类 OrderController：订单控制器，处理前端请求，并调用 OrderService 的 processOrder 方法。</p>
+  <h4>HTML代码</h4>
+  <p>创建订单表单：用户可以输入订单ID和金额，提交表单后通过 AJAX 与后端交互，处理订单。</p>
+  <p>结果显示区域：显示订单处理结果或错误信息。</p>
+  <h4>使用自定义异常的优点</h4>
+  <ul>
+    <li>明确错误类型：自定义异常可以更清晰地表示特定的错误类型，便于捕获和处理。</li>
+    <li>提高代码可读性：通过使用自定义异常，代码更容易理解和维护。</li>
+    <li>集中错误处理：通过统一的错误处理机制，可以更方便地记录和管理错误日志。</li>
+  </ul>
+  <h4>使用 throw 和 throws</h4>
+  <ul>
+    <li>throws 关键字：用于方法声明中，表明该方法可能抛出的异常类型。它通知调用者这个方法可能会抛出异常，需要进行处理。</li>
+    <li>throw 关键字：用于实际抛出异常。它可以在方法体中使用，用于在特定条件下抛出异常。</li>
+  </ul>
+  <h4>不使用自定义异常的缺点</h4>
+  <ul>
+    <li>错误类型不明确：如果不使用自定义异常，可能会使用通用的异常类，使得错误类型不明确，难以区分不同的错误情况。</li>
+    <li>错误处理分散：没有统一的错误处理机制，错误处理逻辑可能会分散在代码的各个地方，导致代码混乱和难以维护。</li>
+    <li>缺乏详细的错误信息：没有自定义异常，程序在遇到错误时可能无法提供详细的错误信息，难以调试和解决问题。</li>
+  </ul>
+  <p>通过合理使用自定义异常，可以提高代码的可读性和可维护性，集中管理错误处理，并向用户提供详细的错误信息。</p>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // 处理订单表单提交
+        $('#orderForm').on('submit', function(event) {
+            event.preventDefault(); // 阻止表单默认提交行为
+
+            var orderData = {
+                orderId: $('#orderId').val(),
+                amount: $('#amount').val()
+            };
+
+            // 发送AJAX请求处理订单
+            $.ajax({
+                url: '/ch10/processOrder',
+                type: 'POST',
+                data: orderData,
+                success: function(response) {
+                    $('#result').html(response);
+                },
+                error: function(error) {
+                    $('#result').text('处理错误: ' + error.responseText);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

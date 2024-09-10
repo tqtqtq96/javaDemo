@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>价格计算器</title>
+  <script src="../js/jquery-3.7.1.min.js"></script>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 20px;
+      }
+      .container {
+          max-width: 600px;
+          margin: 0 auto;
+      }
+      h1 {
+          text-align: center;
+      }
+      form {
+          margin-top: 20px;
+      }
+      label {
+          display: block;
+          margin-top: 10px;
+      }
+      input, select, button {
+          width: 100%;
+          padding: 10px;
+          margin-top: 5px;
+          box-sizing: border-box;
+      }
+      button {
+          background-color: #007bff;
+          color: white;
+          border: none;
+          cursor: pointer;
+      }
+      button:hover {
+          background-color: #0056b3;
+      }
+      #result {
+          margin-top: 20px;
+          font-size: 1.2em;
+          color: #333;
+      }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>价格计算器</h1>
+  <form id="priceCalculatorForm">
+    <label for="price">商品价格:</label>
+    <input type="number" id="price" name="price" step="0.01" required>
+
+    <label for="quantity">数量（可选）:</label>
+    <input type="number" id="quantity" name="quantity">
+
+    <label for="discount">折扣率（%）（可选）:</label>
+    <input type="number" id="discount" name="discount" step="0.01">
+
+    <label for="isMember">是否为会员（可选）:</label>
+    <select id="isMember" name="isMember">
+      <option value="">选择...</option>
+      <option value="true">是</option>
+      <option value="false">否</option>
+    </select>
+
+    <button type="submit">计算价格</button>
+  </form>
+  <div id="result"></div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#priceCalculatorForm').on('submit', function(event) {
+            event.preventDefault();
+            var price = $('#price').val();
+            var quantity = $('#quantity').val();
+            var discount = $('#discount').val();
+            var isMember = $('#isMember').val();
+
+            var data = { price: price };
+            if (quantity) {
+                data.quantity = quantity;
+            }
+            if (discount) {
+                data.discount = discount;
+            }
+            if (isMember) {
+                data.isMember = isMember;
+            }
+
+            $.ajax({
+                url: '/calculatePrice',
+                type: 'POST',
+                data: data,
+                success: function(response) {
+                    $('#result').html(response);
+                },
+                error: function(error) {
+                    $('#result').text('处理错误: ' + error.responseText);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

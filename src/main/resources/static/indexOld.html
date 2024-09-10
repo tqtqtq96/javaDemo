@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>Java案例</title>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+          display: flex;
+          height: 100vh; /* 确保body高度为100vh */
+      }
+      .sidebar {
+          width: 250px;
+          background-color: #0479b4;
+          color: white;
+          height: 100vh; /* 确保sidebar高度为100vh */
+          overflow-y: auto; /* sidebar单独出现滚动条 */
+      }
+      .sidebar h2 {
+          text-align: center;
+          padding: 1em;
+          margin: 0;
+          background-color: #444;
+      }
+      .sidebar h4 {
+          padding: 1em;
+          margin: 0;
+          cursor: pointer;
+      }
+      .sidebar ul {
+          list-style: none;
+          padding: 0;
+      }
+      .sidebar ul li {
+          padding: 5px;
+          border-bottom: 1px solid #05a1ef;
+          line-height: 1em;
+      }
+      .sidebar ul li a {
+          color: white;
+          text-decoration: none;
+          display: block;
+          padding: 10px;
+      }
+      .sidebar ul li a.active {
+          background-color: #005f8c;
+      }
+      .sidebar ul li:hover {
+          background-color: #05a1ef;
+      }
+      .sidebar ul li .submenu {
+          display: none;
+          padding-left: 15px;
+      }
+      .sidebar ul li .submenu li {
+          padding: 10px 0;
+          border: none;
+      }
+      .main {
+          flex-grow: 1;
+          height: 100vh; /* 确保main高度为100vh */
+          overflow-y: hidden; /* main部分单隐藏滚动条 */
+      }
+      iframe {
+          width: 100%;
+          height: 100%;
+          border: none;
+      }
+  </style>
+  <script src="js/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+<div class="sidebar">
+  <h2>导航</h2>
+  <ul>
+    <li>
+      <h4>Java语言基础</h4>
+      <ul class="submenu">
+        <li><a href="ch02/dataType.html" target="mainFrame">数据类型</a></li>
+        <li><a href="ch02/dataTypeConversion.html" target="mainFrame">数据类型转换</a></li>
+        <li><a href="ch02/expressionStatement.html" target="mainFrame">表达式与语句</a></li>
+      </ul>
+    </li>
+    <li>
+      <h4>程序流程控制</h4>
+      <ul class="submenu">
+        <li><a href="ch03/GradeEvaluator.html" target="mainFrame">选择结构</a></li>
+        <li><a href="ch03/loop.html" target="mainFrame">循环结构</a></li>
+      </ul>
+    </li>
+    <li>
+      <h4>数组</h4>
+      <ul class="submenu">
+        <li><a href="ch04/array.html" target="mainFrame">一维数组</a></li>
+        <li><a href="ch04/grade.html" target="mainFrame">二维数组</a></li>
+      </ul>
+    </li>
+    <li>
+      <h4>方法</h4>
+      <ul class="submenu">
+        <li><a href="ch05/priceCalculator.html" target="mainFrame">方法重载</a></li>
+        <li><a href="ch05/priceCalculator2.html" target="mainFrame">形参长度可变方法</a></li>
+      </ul>
+    </li>
+    <li>
+      <h4>面向对象编程上</h4>
+      <ul class="submenu">
+        <li><a href="ch06/userRegister.html" target="mainFrame">类与对象，封装</a></li>
+        <li><a href="ch06/order.html" target="mainFrame">匿名对象和this关键字</a></li>
+        <li><a href="ch06/employee.html" target="mainFrame">static关键字和对象数组</a></li>
+        <li><a href="ch06/acount.html" target="mainFrame">内部类</a></li>
+      </ul>
+    </li>
+    <li>
+      <h4>面向对象编程中</h4>
+      <ul class="submenu">
+        <li><a href="ch07/book.html" target="mainFrame">继承</a></li>
+        <li><a href="ch07/payment.html" target="mainFrame">抽象类</a></li>
+        <li><a href="ch07/shape.html" target="mainFrame">接口</a></li>
+        <li><a href="ch07/logger.html" target="mainFrame">匿名内部类和lambda表达式</a></li>
+      </ul>
+    </li>
+    <li>
+      <h4>面向对象编程下</h4>
+      <ul class="submenu">
+        <li><a href="ch08/course.html" target="mainFrame">组合关系</a></li>
+        <li><a href="ch08/order.html" target="mainFrame">聚合关系</a></li>
+        <li><a href="ch08/configurationManager.html" target="mainFrame">单例模式</a></li>
+        <li><a href="ch08/database.html" target="mainFrame">简单工厂模式</a></li>
+      </ul>
+    </li>
+    <li>
+      <h4>包及访问控制权限</h4>
+      <ul class="submenu">
+        <li><a href="ch09/user.html" target="mainFrame">访问权限控制符</a></li>
+      </ul>
+    </li>
+    <li>
+      <h4>异常处理</h4>
+      <ul class="submenu">
+        <li><a href="ch10/user.html" target="mainFrame">try...catch...finally语句</a></li>
+        <li><a href="ch10/order.html" target="mainFrame">自定义异常</a></li>
+      </ul>
+    </li>
+    <li>
+      <h4>泛型</h4>
+      <ul class="submenu">
+        <li><a href="ch11/inventory.html" target="mainFrame">泛型类和通配符</a></li>
+        <li><a href="ch11/storage.html" target="mainFrame">泛型接口</a></li>
+        <li><a href="ch11/product.html" target="mainFrame">泛型方法</a></li>
+      </ul>
+    </li>
+  </ul>
+</div>
+<div class="main">
+  <iframe name="mainFrame" src="welcome.html"></iframe>
+</div>
+
+<script>
+    $(document).ready(function(){
+        $('.sidebar ul li h4').click(function(){
+            $(this).next('.submenu').slideToggle();
+            $(this).parent().siblings().find('.submenu').slideUp();
+        });
+
+        $('.sidebar ul li a').click(function(){
+            $('.sidebar ul li a').removeClass('active');
+            $(this).addClass('active');
+        });
+
+        // Set initial iframe source to the first submenu link
+        $('.submenu a:first').attr('target', 'mainFrame').click();
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>Java 数据类型</title>
+  <script src="../js/jquery-3.7.1.min.js"></script>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          background-color: #f4f4f9;
+          margin: 20px;
+      }
+      h1 {
+          color: #333;
+          text-align: center;
+          margin-bottom: 20px;
+      }
+      table {
+          width: 60%;
+          margin: 0 auto;
+          border-collapse: collapse;
+          background-color: #fff;
+          box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      }
+      th, td {
+          padding: 15px;
+          text-align: center;
+          border: 1px solid #ddd;
+      }
+      th {
+          background-color: #f2f2f2;
+          font-weight: bold;
+      }
+      td {
+          font-size: 14px;
+          color: #555;
+      }
+  </style>
+</head>
+<body>
+
+<h1>Java 基本数据类型</h1>
+
+<p style="text-align: center; color: #666;">以下表格展示了Java中的基本数据类型及其示例值。</p>
+
+<table>
+  <tr>
+    <th>数据类型</th>
+    <th>示例值</th>
+  </tr>
+  <tr>
+    <td>byte (字节)</td>
+    <td id="exampleByte"></td>
+  </tr>
+  <tr>
+    <td>short (短整型)</td>
+    <td id="exampleShort"></td>
+  </tr>
+  <tr>
+    <td>int (整型)</td>
+    <td id="exampleInt"></td>
+  </tr>
+  <tr>
+    <td>long (长整型)</td>
+    <td id="exampleLong"></td>
+  </tr>
+  <tr>
+    <td>float (浮点型)</td>
+    <td id="exampleFloat"></td>
+  </tr>
+  <tr>
+    <td>double (双精度浮点型)</td>
+    <td id="exampleDouble"></td>
+  </tr>
+  <tr>
+    <td>char (字符型)</td>
+    <td id="exampleChar"></td>
+  </tr>
+  <tr>
+    <td>boolean (布尔型)</td>
+    <td id="exampleBoolean"></td>
+  </tr>
+  <tr>
+    <td>String (字符串)</td>
+    <td id="exampleString"></td>
+  </tr>
+</table>
+
+<script>
+    $(document).ready(function(){
+        $.getJSON('/data-types', function(data) {
+            $('#exampleByte').text(data.exampleByte);
+            $('#exampleShort').text(data.exampleShort);
+            $('#exampleInt').text(data.exampleInt);
+            $('#exampleLong').text(data.exampleLong);
+            $('#exampleFloat').text(data.exampleFloat);
+            $('#exampleDouble').text(data.exampleDouble);
+            $('#exampleChar').text(data.exampleChar);
+            $('#exampleBoolean').text(data.exampleBoolean);
+            $('#exampleString').text(data.exampleString);
+        });
+    });
+</script>
+</body>
+</html>

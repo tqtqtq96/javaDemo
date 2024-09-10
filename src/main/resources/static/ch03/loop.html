@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>循环结构示例</title>
+  <script src="../js/jquery-3.7.1.min.js"></script>
+  <style>
+      body {
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          background-color: #f4f7f6;
+          margin: 0;
+          padding: 20px;
+          color: #333;
+      }
+      .container {
+          max-width: 400px;
+          margin: 0 auto;
+          background-color: #fff;
+          padding: 30px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          border-radius: 8px;
+      }
+      h1 {
+          text-align: center;
+          color: #444;
+          font-size: 24px;
+          margin-bottom: 20px;
+      }
+      form {
+          margin-top: 20px;
+      }
+      label {
+          display: block;
+          margin-bottom: 10px;
+          font-weight: bold;
+          color: #555;
+      }
+      input[type="number"] {
+          width: 100%;
+          padding: 12px;
+          margin-top: 5px;
+          box-sizing: border-box;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          font-size: 16px;
+          transition: border-color 0.3s;
+      }
+      input[type="number"]:focus {
+          border-color: #007bff;
+          outline: none;
+      }
+      .radio-group {
+          margin-top: 10px;
+      }
+      .radio-group label {
+          display: inline-block;
+          margin-right: 10px;
+          font-weight: normal;
+      }
+      input[type="radio"] {
+          margin-right: 5px;
+      }
+      button {
+          width: 100%;
+          padding: 12px;
+          margin-top: 20px;
+          background-color: #007bff;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 16px;
+          transition: background-color 0.3s;
+      }
+      button:hover {
+          background-color: #0056b3;
+      }
+      #result {
+          margin-top: 20px;
+          font-size: 18px;
+          color: #555;
+          text-align: center;
+      }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>循环结构示例</h1>
+  <form id="loopForm">
+    <label for="number">输入一个数字:</label>
+    <input type="number" id="number" name="number" required>
+    <div class="radio-group">
+      <label>
+        <input type="radio" id="forLoop" name="loopType" value="for" checked>
+        for 循环
+      </label>
+      <label>
+        <input type="radio" id="whileLoop" name="loopType" value="while">
+        while 循环
+      </label>
+    </div>
+    <button type="submit">生成序列</button>
+  </form>
+  <div id="result"></div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#loopForm').on('submit', function(event) {
+            event.preventDefault();
+            var number = $('#number').val();
+            var loopType = $('input[name="loopType"]:checked').val();
+
+            $.ajax({
+                url: '/generateSequence',
+                type: 'POST',
+                data: { number: number, loopType: loopType },
+                success: function(data) {
+                    $('#result').text('生成的序列: ' + data);
+                },
+                error: function(error) {
+                    $('#result').text('生成错误: ' + error.responseText);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>课程管理系统</title>
+  <script src="../js/jquery-3.7.1.min.js"></script>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 20px;
+      }
+      .container {
+          margin: 0 auto;
+          padding: 20px 100px;
+      }
+      h1 {
+          text-align: center;
+      }
+      form {
+          margin-top: 20px;
+      }
+      label {
+          display: block;
+          margin-top: 10px;
+      }
+      input[type="text"], input[type="number"], button {
+          width: 100%;
+          padding: 10px;
+          margin-top: 5px;
+          box-sizing: border-box;
+      }
+      button {
+          background-color: #007bff;
+          color: white;
+          border: none;
+          cursor: pointer;
+      }
+      button:hover {
+          background-color: #0056b3;
+      }
+      #result, #courses, #students {
+          margin-top: 20px;
+          font-size: 1.2em;
+          color: #333;
+      }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>课程管理案例</h1>
+  <!-- 添加课程表单 -->
+  <form id="courseForm">
+    <label for="courseName">课程名称:</label>
+    <input type="text" id="courseName" name="courseName" required>
+    <button type="submit">添加课程</button>
+  </form>
+  <div id="result"></div>
+
+  <!-- 添加学生表单 -->
+  <form id="studentForm">
+    <label for="courseNameForStudent">课程名称:</label>
+    <input type="text" id="courseNameForStudent" name="courseNameForStudent" required>
+    <label for="studentName">学生姓名:</label>
+    <input type="text" id="studentName" name="studentName" required>
+    <label for="studentAge">学生年龄:</label>
+    <input type="number" id="studentAge" name="studentAge" required>
+    <button type="submit">添加学生</button>
+  </form>
+
+  <button id="getCourses">获取所有课程</button>
+  <div id="courses"></div>
+
+  <form id="studentsForm">
+    <label for="courseNameForStudents">课程名称:</label>
+    <input type="text" id="courseNameForStudents" name="courseNameForStudents" required>
+    <button type="submit">获取课程的学生</button>
+  </form>
+  <div id="students"></div>
+  <h4>代码说明</h4>
+  <h4>Java代码</h4>
+  <p>类 Student：表示一个学生，包含姓名和年龄。</p>
+  <p>类 Course：表示一个课程，包含课程名称和学生列表。使用组合关系将学生列表包含在课程类中。</p>
+  <p>控制器 CourseController：提供添加课程、添加学生、获取所有课程和获取课程的学生的接口。</p>
+  <h4>HTML代码</h4>
+  <p>添加课程表单：用户可以输入课程名称，并添加课程。</p>
+  <p>添加学生表单：用户可以选择课程名称，并输入学生姓名和年龄，添加学生到课程中。</p>
+  <p>获取所有课程按钮：用户可以点击按钮，获取所有课程及其学生人数。</p>
+  <p>获取课程的学生表单：用户可以输入课程名称，获取该课程的所有学生。</p>
+  <h4>为什么使用组合关系</h4>
+  <p>清晰的类结构：组合关系将相关的对象组织在一起，形成一个清晰的类结构。例如，课程和学生的关系通过组合关系得到体现。</p>
+  <p>简化代码：组合关系简化了对象之间的数据传递，减少了耦合度，提高了代码的可维护性。</p>
+  <p>增强灵活性：组合关系使得对象可以更灵活地进行扩展和修改，而不需要对整个系统进行重大调整。</p>
+  <h4>不使用组合关系的缺点</h4>
+  <p>高耦合度：如果不使用组合关系，我们将不得不在多个类之间传递大量数据，导致代码的耦合度高，难以维护。</p>
+  <p>低可维护性：没有组合关系，类之间的关系变得模糊，代码的可读性和可维护性下降。</p>
+  <p>数据一致性问题：没有组合关系，数据的一致性和完整性难以保证，需要额外的代码来管理对象之间的关系。</p>
+  使用组合关系可以使代码更简洁、清晰和易于维护，提高代码的可扩展性和灵活性。
+</div>
+
+<script>
+    $(document).ready(function() {
+        // 添加课程表单提交处理
+        $('#courseForm').on('submit', function(event) {
+            event.preventDefault(); // 阻止表单默认提交行为
+
+            var courseData = {
+                courseName: $('#courseName').val()
+            };
+
+            // 发送AJAX请求添加课程
+            $.ajax({
+                url: '/addCourse',
+                type: 'POST',
+                data: courseData,
+                success: function(response) {
+                    $('#result').html(response);
+                },
+                error: function(error) {
+                    $('#result').text('处理错误: ' + error.responseText);
+                }
+            });
+        });
+
+        // 添加学生表单提交处理
+        $('#studentForm').on('submit', function(event) {
+            event.preventDefault(); // 阻止表单默认提交行为
+
+            var studentData = {
+                courseName: $('#courseNameForStudent').val(),
+                studentName: $('#studentName').val(),
+                studentAge: $('#studentAge').val()
+            };
+
+            // 发送AJAX请求添加学生
+            $.ajax({
+                url: '/addStudent',
+                type: 'POST',
+                data: studentData,
+                success: function(response) {
+                    $('#result').html(response);
+                },
+                error: function(error) {
+                    $('#result').text('处理错误: ' + error.responseText);
+                }
+            });
+        });
+
+        // 获取所有课程
+        $('#getCourses').on('click', function() {
+            $.ajax({
+                url: '/courses',
+                type: 'GET',
+                success: function(response) {
+                    var coursesHtml = '所有课程: <br>';
+                    response.forEach(function(course) {
+                        coursesHtml += course.courseName + ' (学生人数: ' + course.students.length + ')<br>';
+                    });
+                    $('#courses').html(coursesHtml);
+                },
+                error: function(error) {
+                    $('#courses').text('获取课程信息错误: ' + error.responseText);
+                }
+            });
+        });
+
+        // 获取课程的学生
+        $('#studentsForm').on('submit', function(event) {
+            event.preventDefault(); // 阻止表单默认提交行为
+
+            var courseName = $('#courseNameForStudents').val();
+
+            // 发送AJAX请求获取课程的学生
+            $.ajax({
+                url: '/courseStudents',
+                type: 'GET',
+                data: { courseName: courseName },
+                success: function(response) {
+                    var studentsHtml = '课程: ' + courseName + ' 的学生: <br>';
+                    response.forEach(function(student) {
+                        studentsHtml += student.name + ' (年龄: ' + student.age + ')<br>';
+                    });
+                    $('#students').html(studentsHtml);
+                },
+                error: function(error) {
+                    $('#students').text('获取学生信息错误: ' + error.responseText);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

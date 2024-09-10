@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>成绩表示例</title>
+  <script src="../js/jquery-3.7.1.min.js"></script>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 20px;
+      }
+      .container {
+          max-width: 600px;
+          margin: 0 auto;
+      }
+      h1 {
+          text-align: center;
+      }
+      form {
+          margin-top: 20px;
+      }
+      label {
+          display: block;
+          margin-top: 10px;
+      }
+      textarea, button {
+          width: 100%;
+          padding: 10px;
+          margin-top: 5px;
+          box-sizing: border-box;
+      }
+      button {
+          background-color: #007bff;
+          color: white;
+          border: none;
+          cursor: pointer;
+      }
+      button:hover {
+          background-color: #0056b3;
+      }
+      #result {
+          margin-top: 20px;
+          font-size: 1.2em;
+          color: #333;
+      }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>成绩表示例</h1>
+  <form id="gradeForm">
+    <label for="data">输入学生信息和成绩（格式：学号,姓名,课程1成绩,课程2成绩,...;多个学生用分号分隔，例如 "123,张三,80,90,85;124,李四,70,60,75"）:</label>
+    <textarea id="data" name="data" rows="5" required></textarea>
+    <button type="submit">计算成绩</button>
+  </form>
+  <div id="result"></div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#gradeForm').on('submit', function(event) {
+            event.preventDefault();
+            var data = $('#data').val();
+
+            $.ajax({
+                url: '/processGrades',
+                type: 'POST',
+                data: { data: data },
+                success: function(response) {
+                    $('#result').html('结果:<br>' + response);
+                },
+                error: function(error) {
+                    $('#result').text('处理错误: ' + error.responseText);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>用户管理系统</title>
+  <script src="../js/jquery-3.7.1.min.js"></script>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 20px;
+      }
+      .container {
+          max-width: 600px;
+          margin: 0 auto;
+      }
+      h1 {
+          text-align: center;
+      }
+      form, .users {
+          margin-top: 20px;
+      }
+      label {
+          display: block;
+          margin-top: 10px;
+      }
+      input[type="text"], input[type="password"], button {
+          width: 100%;
+          padding: 10px;
+          margin-top: 5px;
+          box-sizing: border-box;
+      }
+      button {
+          background-color: #007bff;
+          color: white;
+          border: none;
+          cursor: pointer;
+      }
+      button:hover {
+          background-color: #0056b3;
+      }
+      #result, #usersList {
+          margin-top: 20px;
+          font-size: 1.2em;
+          color: #333;
+      }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>用户管理系统</h1>
+
+  <!-- 获取所有用户信息 -->
+  <button id="getAllUsers">获取所有用户信息</button>
+  <div id="usersList" class="users"></div>
+
+  <!-- 添加用户表单 -->
+  <form id="addUserForm">
+    <label for="name">用户名:</label>
+    <input type="text" id="name" name="name" required>
+    <label for="age">年龄:</label>
+    <input type="text" id="age" name="age" required>
+    <label for="password">密码:</label>
+    <input type="password" id="password" name="password" required>
+    <label for="email">邮箱:</label>
+    <input type="text" id="email" name="email" required>
+    <button type="submit">添加用户</button>
+  </form>
+
+  <div id="result"></div>
+  <h4>代码说明</h4>
+  <h4>Java代码</h4>
+  <p>类User：表示用户对象，包含用户名、年龄、密码和邮箱属性。不同属性和方法使用不同的访问控制符（public、protected、default、private）来控制访问权限。</p>
+  <p>类 UserService：提供用户的添加和获取功能。</p>
+  <p>类 UserController：提供访问用户服务的API，包括获取所有用户信息和添加用户。</p>
+  <h4>HTML代码</h4>
+  <p>获取所有用户信息按钮：用户可以点击按钮，获取所有用户信息。</p>
+  <p>添加用户表单：用户可以输入用户名、年龄、密码和邮箱，并添加用户。</p>
+  <p>结果显示区域：显示操作结果。</p>
+  <h4>使用访问控制权限的优点</h4>
+  <p>数据封装：通过使用不同的访问控制符，可以实现数据封装，保护数据的安全性和完整性。</p>
+  <p>权限控制：访问控制符可以限制类、方法和变量的访问范围，提高系统的安全性和稳定性。</p>
+  <p>代码可维护性：通过合理使用访问控制符，可以减少代码耦合，提高代码的可维护性和可读性。</p>
+  <h4>不使用访问控制权限的缺点</h4>
+  <p>数据安全性低：如果不使用访问控制符，所有类、方法和变量都可以被任意访问，容易导致数据泄露和不一致。</p>
+  <p>权限混乱：没有访问控制权限的限制，所有代码都可以互相访问，容易导致权限混乱和错误。</p>
+  <p>难以维护：没有访问控制权限的限制，代码之间的耦合度高，增加了维护难度和复杂度。</p>
+  <p>通过合理使用访问控制权限，可以实现数据封装和权限控制，提高系统的安全性、稳定性和可维护性。</p>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // 获取所有用户信息
+        $('#getAllUsers').on('click', function() {
+            $.ajax({
+                url: '/ch09/users',
+                type: 'GET',
+                success: function(response) {
+                    var usersHtml = '所有用户信息: <br>';
+                    response.forEach(function(userInfo) {
+                        usersHtml += userInfo + '<br>';
+                    });
+                    $('#usersList').html(usersHtml);
+                },
+                error: function(error) {
+                    $('#usersList').text('获取用户信息时出错: ' + error.responseText);
+                }
+            });
+        });
+
+        // 添加用户表单提交处理
+        $('#addUserForm').on('submit', function(event) {
+            event.preventDefault(); // 阻止表单默认提交行为
+
+            var userData = {
+                name: $('#name').val(),
+                age: $('#age').val(),
+                password: $('#password').val(),
+                email: $('#email').val()
+            };
+
+            // 发送AJAX请求添加用户
+            $.ajax({
+                url: '/ch09/users',
+                type: 'POST',
+                data: userData,
+                success: function(response) {
+                    $('#result').html(response);
+                },
+                error: function(error) {
+                    $('#result').text('处理错误: ' + error.responseText);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

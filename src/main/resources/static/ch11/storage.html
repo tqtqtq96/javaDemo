@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>仓库管理系统</title>
+  <script src="../js/jquery-3.7.1.min.js"></script>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 20px;
+      }
+      .container {
+          max-width: 600px;
+          margin: 0 auto;
+      }
+      h1 {
+          text-align: center;
+      }
+      form {
+          margin-top: 20px;
+      }
+      label {
+          display: block;
+          margin-top: 10px;
+      }
+      input[type="text"], button {
+          width: 100%;
+          padding: 10px;
+          margin-top: 5px;
+          box-sizing: border-box;
+      }
+      button {
+          background-color: #007bff;
+          color: white;
+          border: none;
+          cursor: pointer;
+      }
+      button:hover {
+          background-color: #0056b3;
+      }
+      #result, #items {
+          margin-top: 20px;
+          font-size: 1.2em;
+          color: #333;
+      }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>仓库管理系统</h1>
+
+  <!-- 添加物品表单 -->
+  <form id="itemForm">
+    <label for="itemId">物品ID:</label>
+    <input type="text" id="itemId" name="itemId" required>
+    <label for="name">物品名称:</label>
+    <input type="text" id="name" name="name" required>
+    <button type="submit">添加物品</button>
+  </form>
+
+  <div id="result"></div>
+  <div id="items"></div>
+  <h4>代码说明</h4>
+  <h4>Java代码</h4>
+  <p>接口 Storage：泛型接口，用于定义存储行为，包含添加物品和获取物品的方法。</p>
+  <p>类 Item：物品类，包含物品ID和名称。</p>
+  <p>类 ItemStorage：物品存储类，实现泛型接口 Storage，提供物品的添加和获取功能。</p>
+  <p>类 StorageController：存储控制器，提供添加物品和获取物品的API。</p>
+  <h4>HTML代码</h4>
+  <p>添加物品表单：用户可以输入物品ID和名称，提交表单后通过 AJAX 与后端交互，添加物品到存储。</p>
+  <p>结果显示区域：显示操作结果或错误信息。</p>
+  <p>存储显示区域：显示所有存储中的物品信息。</p>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // 处理物品表单提交
+        $('#itemForm').on('submit', function(event) {
+            event.preventDefault(); // 阻止表单默认提交行为
+
+            var itemData = {
+                itemId: $('#itemId').val(),
+                name: $('#name').val()
+            };
+
+            // 发送AJAX请求添加物品
+            $.ajax({
+                url: '/ch11/addItem',
+                type: 'POST',
+                data: itemData,
+                success: function(response) {
+                    $('#result').html(response);
+                    updateItems();
+                },
+                error: function(error) {
+                    $('#result').text('处理错误: ' + error.responseText);
+                }
+            });
+        });
+
+        // 更新存储物品信息
+        function updateItems() {
+            $.ajax({
+                url: '/ch11/getAllItems',
+                type: 'GET',
+                success: function(response) {
+                    var itemsHtml = '<h2>存储的物品</h2>';
+                    $.each(response, function(key, item) {
+                        itemsHtml += '<p>' + item.itemId + ' - ' + item.name + '</p>';
+                    });
+                    $('#items').html(itemsHtml);
+                },
+                error: function(error) {
+                    $('#items').text('获取物品信息错误: ' + error.responseText);
+                }
+            });
+        }
+
+        // 初始化获取存储物品信息
+        updateItems();
+    });
+</script>
+</body>
+</html>

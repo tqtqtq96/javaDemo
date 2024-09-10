@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>图形管理系统</title>
+  <script src="../js/jquery-3.7.1.min.js"></script>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 20px 150px;
+      }
+
+      .container {
+          margin: 0 auto;
+      }
+
+      h1 {
+          text-align: center;
+      }
+
+      form {
+          margin-top: 20px;
+      }
+
+      label {
+          display: block;
+          margin-top: 10px;
+      }
+
+      input[type="text"], input[type="number"], button {
+          width: 100%;
+          padding: 10px;
+          margin-top: 5px;
+          box-sizing: border-box;
+      }
+
+      .radio-group {
+          margin-top: 5px;
+      }
+
+      .radio-group label {
+          display: inline-block;
+          margin-right: 10px;
+      }
+
+      button {
+          background-color: #007bff;
+          color: white;
+          border: none;
+          cursor: pointer;
+      }
+
+      button:hover {
+          background-color: #0056b3;
+      }
+
+      #result, #totalArea {
+          margin-top: 20px;
+          font-size: 1.2em;
+          color: #333;
+      }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>图形管理系统</h1>
+  <!-- 图形表单 -->
+  <form id="shapeForm">
+    <label for="type">图形类型:</label>
+    <div class="radio-group">
+      <label>
+        <input type="radio" name="type" value="circle" required> 圆形
+      </label>
+      <label>
+        <input type="radio" name="type" value="rectangle"> 矩形
+      </label>
+    </div>
+
+    <label for="dimension1">维度1（半径或宽度）:</label>
+    <input type="number" id="dimension1" name="dimension1" step="0.01" required>
+
+    <label for="dimension2">维度2（仅用于矩形，高度）:</label>
+    <input type="number" id="dimension2" name="dimension2" step="0.01">
+
+    <button type="submit">添加图形</button>
+  </form>
+  <div id="result"></div>
+  <div id="totalArea"></div>
+  <h4>Java接口实例说明</h4>
+  <p>在Java编程中，接口是一种抽象类型，用于指定类必须实现的方法。使用接口可以实现多态，使得代码更加灵活和可扩展。通过使用接口，可以定义一组不相关的类之间的共同行为。这里我们使用一个图形绘制系统的实例来说明接口的应用场景。</p>
+  <h4>实例场景</h4>
+  <p>
+    假设我们有一个图形绘制系统，支持多种图形（如圆形和矩形）的绘制和计算面积。使用接口可以方便地添加新的图形类型，而不需要修改现有代码。</p>
+  <h4>代码说明</h4>
+  <h4>Java代码</h4>
+  <p>接口 Shape：定义了两个方法 calculateArea 和 draw，所有图形类都必须实现这些方法</p>。
+  <p>类 Circle 和 Rectangle：实现了 Shape 接口，并提供具体的绘制和计算面积的方法。</p>
+  <p>控制器 ShapeController：接收前端请求，创建图形对象并调用相应的方法。</p>
+  <h4>HTML代码</h4>
+  <p>图形表单：用户可以选择图形类型（圆形或矩形），并输入维度。</p>
+  <p>JavaScript：处理表单提交，通过AJAX向后端发送请求，并更新结果和总面积。</p>
+  <h4>为什么使用接口</h4>
+  <p>灵活性和扩展性：接口允许添加新的图形类型而不需要修改现有代码。</p>
+  <p>低耦合：通过接口定义标准，使得代码更具模块化和可维护性。</p>
+  <h4>不使用接口的问题</h4>
+  <p>高耦合：所有图形类的代码耦合在一起，难以维护和扩展。</p>
+  <p>代码重复：每次添加新的图形类型，都需要复制和修改大量代码。</p>
+  <p>使用接口可以使代码更简洁、灵活和易于维护。</p>
+</div>
+
+<script>
+    $(document).ready(function () {
+        // 表单提交处理
+        $('#shapeForm').on('submit', function (event) {
+            event.preventDefault(); // 阻止表单默认提交行为
+
+            var shapeData = {
+                type: $('input[name="type"]:checked').val(), // 获取选中的图形类型
+                dimensions: [$('#dimension1').val()]
+            };
+            if (shapeData.type === 'rectangle') {
+                shapeData.dimensions.push($('#dimension2').val());
+            }
+
+            // 发送AJAX请求添加图形
+            $.ajax({
+                url: '/addShape',
+                type: 'POST',
+                data: shapeData,
+                traditional: true,
+                success: function (response) {
+                    $('#result').html(response);
+                    updateTotalArea();
+                },
+                error: function (error) {
+                    $('#result').text('处理错误: ' + error.responseText);
+                }
+            });
+        });
+
+        // 更新总面积
+        function updateTotalArea() {
+            $.ajax({
+                url: '/totalArea',
+                type: 'GET',
+                success: function (response) {
+                    $('#totalArea').html('总面积: ' + response);
+                },
+                error: function (error) {
+                    $('#totalArea').text('获取总面积错误: ' + error.responseText);
+                }
+            });
+        }
+
+        // 页面初始化时更新总面积
+        updateTotalArea();
+    });
+</script>
+</body>
+</html>

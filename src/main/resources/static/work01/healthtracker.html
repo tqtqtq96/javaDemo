@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI健康记录</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { width: 50%; margin: 0 auto; text-align: center; }
+        .form-group { margin-bottom: 1em; }
+        input[type="text"], input[type="number"] { padding: 0.5em; width: 100%; margin-top: 0.5em; }
+        button { padding: 0.75em 1.5em; background-color: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        table { width: 100%; margin-top: 2em; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 0.75em; text-align: left; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>BMI健康记录</h1>
+
+    <div class="form-group">
+        <label for="name">姓名：</label>
+        <input type="text" id="name" placeholder="请输入您的姓名">
+    </div>
+
+    <div class="form-group">
+        <label for="weight">体重（公斤）：</label>
+        <input type="number" id="weight" placeholder="请输入您的体重">
+    </div>
+
+    <div class="form-group">
+        <label for="height">身高（米）：</label>
+        <input type="number" step="0.01" id="height" placeholder="请输入您的身高">
+    </div>
+
+    <button onclick="submitRecord()">提交记录</button>
+    <p id="feedback"></p>
+
+    <h2>BMI汇总报告</h2>
+    <button onclick="viewReport()">查看汇总报告</button>
+
+    <table id="bmiTable">
+        <thead>
+        <tr>
+            <th>姓名</th>
+            <th>身高（米）</th>
+            <th>体重（公斤）</th>
+            <th>BMI</th>
+            <th>健康反馈</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<script>
+    // 提交BMI记录
+    function submitRecord() {
+        var name = document.getElementById('name').value;
+        var weight = parseFloat(document.getElementById('weight').value);
+        var height = parseFloat(document.getElementById('height').value);
+
+        if (!name || !weight || !height) {
+            document.getElementById('feedback').innerText = '请填写完整信息';
+            return;
+        }
+
+        var bmiRecord = {
+            name: name,
+            weight: weight,
+            height: height
+        };
+
+        fetch('/api/bmi/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(bmiRecord)
+        })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('feedback').innerText = data;
+            });
+    }
+
+    // 查看BMI汇总报告
+    function viewReport() {
+        fetch('/api/bmi/report')
+            .then(response => response.json())
+            .then(data => {
+                var tableBody = document.querySelector('#bmiTable tbody');
+                tableBody.innerHTML = ''; // 清空表格内容
+                data.forEach(record => {
+                    var newRow = `<tr>
+                    <td>${record.name}</td>
+                    <td>${record.height}</td>
+                    <td>${record.weight}</td>
+                    <td>${record.bmi.toFixed(2)}</td>
+                    <td>${record.feedback}</td>
+                </tr>`;
+                    tableBody.innerHTML += newRow;
+                });
+            });
+    }
+</script>
+
+</body>
+</html>

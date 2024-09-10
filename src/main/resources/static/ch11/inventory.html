@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>库存管理系统</title>
+  <script src="../js/jquery-3.7.1.min.js"></script>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 20px;
+      }
+      .container {
+          max-width: 600px;
+          margin: 0 auto;
+      }
+      h1 {
+          text-align: center;
+      }
+      form {
+          margin-top: 20px;
+      }
+      label {
+          display: block;
+          margin-top: 10px;
+      }
+      input[type="text"], button {
+          width: 100%;
+          padding: 10px;
+          margin-top: 5px;
+          box-sizing: border-box;
+      }
+      button {
+          background-color: #007bff;
+          color: white;
+          border: none;
+          cursor: pointer;
+      }
+      button:hover {
+          background-color: #0056b3;
+      }
+      #result, #inventory {
+          margin-top: 20px;
+          font-size: 1.2em;
+          color: #333;
+      }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>库存管理系统</h1>
+
+  <!-- 添加产品表单 -->
+  <form id="productForm">
+    <label for="productId">产品ID:</label>
+    <input type="text" id="productId" name="productId" required>
+    <label for="name">产品名称:</label>
+    <input type="text" id="name" name="name" required>
+    <label for="brand">品牌（可选）:</label>
+    <input type="text" id="brand" name="brand">
+    <button type="submit">添加产品</button>
+  </form>
+
+  <div id="result"></div>
+  <div id="inventory"></div>
+  <h4>代码说明</h4>
+  <h4>Java代码</h4>
+  <p>类 Product：基本的产品类，包含产品ID和名称。</p>
+  <p>类 Electronics：电子产品类，继承自 Product，增加了品牌属性。</p>
+  <p>类 Inventory：泛型类，用于管理不同类型的产品。printInventory 方法使用通配符打印产品信息。</p>
+  <p>类 InventoryController：库存控制器，提供添加产品和获取库存信息的API。</p>
+  <h4>HTML代码</h4>
+  <p>添加产品表单：用户可以输入产品ID、名称和可选的品牌，提交表单后通过 AJAX 与后端交互，添加产品到库存。</p>
+  <p>结果显示区域：显示操作结果或错误信息。</p>
+  <p>库存显示区域：显示所有库存中的产品信息。</p>
+  <h4>使用泛型类和通配符的优点</h4>
+  <p>代码复用性：泛型类允许我们编写更加通用和复用的代码，适用于多种类型。</p>
+  <p>类型安全：在编译时检查类型，减少运行时错误。</p>
+  <p>灵活性：通配符允许方法处理多种类型的集合，提高代码的灵活性。</p>
+  <h4>不使用泛型类和通配符的缺点</h4>
+  <p>类型不安全：没有泛型的情况下，需要进行类型转换，容易出错。</p>
+  <p>代码重复：没有泛型的情况下，需要为每种类型编写单独的代码，增加代码的重复性和维护成本。</p>
+  <p>通过合理使用泛型类和通配符，可以提高代码的复用性、类型安全性和灵活性，使得代码更加简洁和易于维护。</p>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // 处理产品表单提交
+        $('#productForm').on('submit', function(event) {
+            event.preventDefault(); // 阻止表单默认提交行为
+
+            var productData = {
+                productId: $('#productId').val(),
+                name: $('#name').val(),
+                brand: $('#brand').val() || null
+            };
+
+            // 发送AJAX请求添加产品
+            $.ajax({
+                url: '/ch11/addProduct',
+                type: 'POST',
+                data: productData,
+                success: function(response) {
+                    $('#result').html(response);
+                    updateInventory();
+                },
+                error: function(error) {
+                    $('#result').text('处理错误: ' + error.responseText);
+                }
+            });
+        });
+
+        // 更新库存信息
+        function updateInventory() {
+            $.ajax({
+                url: '/ch11/getInventory',
+                type: 'GET',
+                success: function(response) {
+                    var inventoryHtml = '<h2>库存产品</h2>';
+                    response.forEach(function(product) {
+                        inventoryHtml += '<p>' + product.productId + ' - ' + product.name + (product.brand ? ' - ' + product.brand : '') + '</p>';
+                    });
+                    $('#inventory').html(inventoryHtml);
+                },
+                error: function(error) {
+                    $('#inventory').text('获取库存信息错误: ' + error.responseText);
+                }
+            });
+        }
+
+        // 初始化获取库存信息
+        updateInventory();
+    });
+</script>
+</body>
+</html>

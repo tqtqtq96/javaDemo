@@ -17,6 +17,7 @@ public class BMIController {
     // 提交BMI记录
     @PostMapping("/submit")
     public String submitRecord(@RequestBody BMIRecord bmiRecord) {
+        System.out.println("提交记录：" + bmiRecord);
         bmiService.saveRecord(bmiRecord);
         return "记录已提交！";
     }

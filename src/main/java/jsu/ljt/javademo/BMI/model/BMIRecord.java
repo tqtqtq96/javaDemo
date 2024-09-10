@@ -1,5 +1,9 @@
 package jsu.ljt.javademo.BMI.model;
 
+
+import lombok.*;
+
+@Data
 public class BMIRecord {
     private String name;
     private double height;
@@ -32,44 +36,8 @@ public class BMIRecord {
         }
     }
 
-    // Getters 和 Setters
-    public String getName() {
-        return name;
+    public String toString() {
+        return "姓名：" + name + "\n身高：" + height + "米\n体重：" + weight + "千克\nBMI：" + bmi + "\n健康反馈：" + feedback;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public double getHeight() {
-        return height;
-    }
-
-    public void setHeight(double height) {
-        this.height = height;
-    }
-
-    public double getWeight() {
-        return weight;
-    }
-
-    public void setWeight(double weight) {
-        this.weight = weight;
-    }
-
-    public double getBmi() {
-        return bmi;
-    }
-
-    public void setBmi(double bmi) {
-        this.bmi = bmi;
-    }
-
-    public String getFeedback() {
-        return feedback;
-    }
-
-    public void setFeedback(String feedback) {
-        this.feedback = feedback;
-    }
 }

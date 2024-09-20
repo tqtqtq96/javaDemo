@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>志愿者活动管理系统</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            width: 700px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        label {
+            width: 80px;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        input[type="text"], input[type="number"], input[type="date"] {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .radio-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .radio-group label {
+            margin-right: 20px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f8f8f8;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>志愿者活动管理</h2>
+
+    <form id="volunteerForm">
+        <div class="form-group">
+            <label for="name">姓名：</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+
+        <div class="form-group">
+            <label for="studentId">学号：</label>
+            <input type="text" id="studentId" name="studentId" required>
+        </div>
+
+        <div class="form-group">
+            <label>活动：</label>
+            <div class="radio-group">
+                <input type="radio" id="activity1" name="activity" value="环保宣传" required>
+                <label for="activity1">环保宣传</label>
+
+                <input type="radio" id="activity2" name="activity" value="社区清扫" required>
+                <label for="activity2">社区清扫</label>
+
+                <input type="radio" id="activity3" name="activity" value="敬老院义工" required>
+                <label for="activity3">敬老院义工</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="date">日期：</label>
+            <input type="date" id="date" name="date" required>
+        </div>
+
+        <div class="form-group">
+            <label for="duration">时长（小时）：</label>
+            <input type="number" id="duration" name="duration" required>
+        </div>
+
+        <button type="submit">提交</button>
+    </form>
+
+    <h3>志愿者详细信息</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>姓名</th>
+            <th>学号</th>
+            <th>活动</th>
+            <th>日期</th>
+            <th>时长 (小时)</th>
+        </tr>
+        </thead>
+        <tbody id="volunteerTable">
+        <!-- 动态填充志愿者信息 -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function () {
+        // 表单提交事件
+        $('#volunteerForm').submit(function (event) {
+            event.preventDefault();  // 防止表单默认提交
+
+            // 获取表单数据
+            const volunteerData = {
+                name: $('#name').val(),
+                studentId: $('#studentId').val(),
+                activity: $('input[name="activity"]:checked').val(),
+                date: $('#date').val(),
+                duration: $('#duration').val()
+            };
+
+            // 使用 AJAX 发送数据到后端
+            $.ajax({
+                type: 'POST',
+                url: '/api/volunteers/add',
+                contentType: 'application/json',
+                data: JSON.stringify(volunteerData),
+                success: function (response) {
+                    // 清空表格并展示返回的志愿者信息
+                    $('#volunteerTable').empty();
+                    response.forEach(function (volunteer) {
+                        $('#volunteerTable').append(`
+                                <tr>
+                                    <td>${volunteer.name}</td>
+                                    <td>${volunteer.studentId}</td>
+                                    <td>${volunteer.activity}</td>
+                                    <td>${volunteer.date}</td>
+                                    <td>${volunteer.duration}</td>
+                                </tr>
+                            `);
+                    });
+                },
+                error: function () {
+                    alert('提交失败，请稍后重试！');
+                }
+            });
+        });
+
+        // 页面加载时获取所有志愿者
+        $.get("/api/volunteers/all", function (response) {
+            response.forEach(function (volunteer) {
+                $('#volunteerTable').append(`
+                        <tr>
+                            <td>${volunteer.name}</td>
+                            <td>${volunteer.studentId}</td>
+                            <td>${volunteer.activity}</td>
+                            <td>${volunteer.date}</td>
+                            <td>${volunteer.duration}</td>
+                        </tr>
+                    `);
+            });
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,8 +1,8 @@
 package jsu.ljt.javademo.controller.ch07;
 
-import jsu.ljt.javademo.model.ch07.CreditCardPayment;
-import jsu.ljt.javademo.model.ch07.Payment;
-import jsu.ljt.javademo.model.ch07.WeChatPayment;
+import jsu.ljt.javademo.pojo.ch07.CreditCardPayment;
+import jsu.ljt.javademo.pojo.ch07.Payment;
+import jsu.ljt.javademo.pojo.ch07.WeChatPayment;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;

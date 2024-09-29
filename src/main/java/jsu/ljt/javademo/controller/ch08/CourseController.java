@@ -1,8 +1,8 @@
 package jsu.ljt.javademo.controller.ch08;
 
 
-import jsu.ljt.javademo.model.ch08.e01.Course;
-import jsu.ljt.javademo.model.ch08.e01.Student;
+import jsu.ljt.javademo.pojo.ch08.e01.Course;
+import jsu.ljt.javademo.pojo.ch08.e01.Student;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;

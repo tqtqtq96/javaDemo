@@ -1,7 +1,7 @@
 package jsu.ljt.javademo.controller.ch10;
 
-import jsu.ljt.javademo.model.ch10.Order;
-import jsu.ljt.javademo.model.ch10.OrderProcessingException;
+import jsu.ljt.javademo.pojo.ch10.Order;
+import jsu.ljt.javademo.pojo.ch10.OrderProcessingException;
 import jsu.ljt.javademo.service.ch10.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

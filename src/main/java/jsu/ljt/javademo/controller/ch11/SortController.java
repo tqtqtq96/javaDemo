@@ -1,6 +1,6 @@
 package jsu.ljt.javademo.controller.ch11;
 
-import jsu.ljt.javademo.model.ch11.e03.Product;
+import jsu.ljt.javademo.pojo.ch11.e03.Product;
 import jsu.ljt.javademo.utils.ch11.SortUtils;
 import org.springframework.web.bind.annotation.*;
 

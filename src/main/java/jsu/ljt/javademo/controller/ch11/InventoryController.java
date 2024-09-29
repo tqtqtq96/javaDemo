@@ -1,8 +1,8 @@
 package jsu.ljt.javademo.controller.ch11;
 
-import jsu.ljt.javademo.model.ch11.e01.Electronics;
-import jsu.ljt.javademo.model.ch11.e01.Inventory;
-import jsu.ljt.javademo.model.ch11.e01.Product;
+import jsu.ljt.javademo.pojo.ch11.e01.Electronics;
+import jsu.ljt.javademo.pojo.ch11.e01.Inventory;
+import jsu.ljt.javademo.pojo.ch11.e01.Product;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

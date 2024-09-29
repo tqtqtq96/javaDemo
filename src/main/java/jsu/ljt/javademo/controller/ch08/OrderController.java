@@ -1,7 +1,7 @@
 package jsu.ljt.javademo.controller.ch08;
 
-import jsu.ljt.javademo.model.ch08.e02.Order;
-import jsu.ljt.javademo.model.ch08.e02.Product;
+import jsu.ljt.javademo.pojo.ch08.e02.Order;
+import jsu.ljt.javademo.pojo.ch08.e02.Product;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 & 注册</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        .container {
+            max-width: 500px;
+            margin-top: 50px;
+        }
+        .form-box {
+            border: 1px solid #ddd;
+            padding: 30px;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+        .form-box h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-box button {
+            width: 100%;
+        }
+        .toggle-link {
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="form-box" id="login-box">
+        <h2>登录</h2>
+        <form id="loginForm">
+            <div class="mb-3">
+                <label for="loginUsername" class="form-label">用户名</label>
+                <input type="text" class="form-control" id="loginUsername" required>
+            </div>
+            <div class="mb-3">
+                <label for="loginPassword" class="form-label">密码</label>
+                <input type="password" class="form-control" id="loginPassword" required>
+            </div>
+            <button type="submit" class="btn btn-primary">登录</button>
+        </form>
+        <div class="toggle-link">
+            <a href="#" id="goToRegister">还没有账号？去注册</a>
+        </div>
+    </div>
+
+    <div class="form-box" id="register-box" style="display:none;">
+        <h2>注册</h2>
+        <form id="registerForm">
+            <div class="mb-3">
+                <label for="registerUsername" class="form-label">用户名</label>
+                <input type="text" class="form-control" id="registerUsername" required>
+            </div>
+            <div class="mb-3">
+                <label for="registerPassword" class="form-label">密码</label>
+                <input type="password" class="form-control" id="registerPassword" required>
+            </div>
+            <button type="submit" class="btn btn-success">注册</button>
+        </form>
+        <div class="toggle-link">
+            <a href="#" id="goToLogin">已有账号？去登录</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 切换到注册页面
+    document.getElementById('goToRegister').addEventListener('click', function () {
+        document.getElementById('login-box').style.display = 'none';
+        document.getElementById('register-box').style.display = 'block';
+    });
+
+    // 切换到登录页面
+    document.getElementById('goToLogin').addEventListener('click', function () {
+        document.getElementById('login-box').style.display = 'block';
+        document.getElementById('register-box').style.display = 'none';
+    });
+
+    // 登录表单提交
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const username = document.getElementById('loginUsername').value;
+        const password = document.getElementById('loginPassword').value;
+
+        const params = new URLSearchParams();
+        params.append('username', username);
+        params.append('password', password);
+
+        fetch('/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: params.toString()  // 将表单数据序列化为URL编码格式
+        })
+            .then(response => response.json())
+            .then(result => {
+                // 检查后端返回的code
+                if (result.code === 1) {
+                    console.log("登录成功: ", result.data); // 登录成功，输出返回的用户信息
+                    // 这里可以跳转到主页
+                    window.location.href = '/index.html';
+                } else {
+                    console.log("登录失败: ", result.msg); // 登录失败，显示错误信息
+                    alert(result.msg);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("请求失败，请稍后再试");
+            });
+
+    });
+
+    // 注册表单提交
+    document.getElementById('registerForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const username = document.getElementById('registerUsername').value;
+        const password = document.getElementById('registerPassword').value;
+
+        const params = new URLSearchParams();
+        params.append('username', username);
+        params.append('password', password);
+
+        fetch('/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: params.toString()  // 将表单数据序列化为URL编码格式
+        })
+            .then(response => response.json())
+            .then(result => {
+                // 检查后端返回的code
+                if (result.code === 1) {
+                    console.log("注册成功: ", result.data); // 注册成功
+                    // 注册成功后跳转到登录页面
+                    window.location.href = '/login.html';
+                } else {
+                    console.log("注册失败: ", result.msg); // 注册失败，显示错误信息
+                    alert(result.msg);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("请求失败，请稍后再试");
+            });
+
+    });
+</script>
+
+</body>
+</html>

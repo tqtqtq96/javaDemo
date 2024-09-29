@@ -1,8 +1,8 @@
 package jsu.ljt.javademo.controller.ch07;
 
-import jsu.ljt.javademo.model.ch07.Book;
-import jsu.ljt.javademo.model.ch07.EBook;
-import jsu.ljt.javademo.model.ch07.PrintedBook;
+import jsu.ljt.javademo.pojo.ch07.Book;
+import jsu.ljt.javademo.pojo.ch07.EBook;
+import jsu.ljt.javademo.pojo.ch07.PrintedBook;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;

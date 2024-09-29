@@ -1,8 +1,8 @@
 package jsu.ljt.javademo.controller.ch07;
 
-import jsu.ljt.javademo.pojo.ch07.e04.ConsoleLogger;
-import jsu.ljt.javademo.pojo.ch07.e04.FileLogger;
-import jsu.ljt.javademo.pojo.ch07.e04.Logger;
+import jsu.ljt.javademo.model.ch07.e04.ConsoleLogger;
+import jsu.ljt.javademo.model.ch07.e04.FileLogger;
+import jsu.ljt.javademo.model.ch07.e04.Logger;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;

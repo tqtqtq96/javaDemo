@@ -1,7 +1,7 @@
 package jsu.ljt.javademo.controller.ch11;
 
-import jsu.ljt.javademo.pojo.ch11.e02.Item;
-import jsu.ljt.javademo.pojo.ch11.e02.ItemStorage;
+import jsu.ljt.javademo.model.ch11.e02.Item;
+import jsu.ljt.javademo.model.ch11.e02.ItemStorage;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;

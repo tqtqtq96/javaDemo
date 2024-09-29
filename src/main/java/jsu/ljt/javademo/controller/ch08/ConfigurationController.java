@@ -1,6 +1,6 @@
 package jsu.ljt.javademo.controller.ch08;
 
-import jsu.ljt.javademo.pojo.ch08.ConfigurationManager;
+import jsu.ljt.javademo.model.ch08.ConfigurationManager;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

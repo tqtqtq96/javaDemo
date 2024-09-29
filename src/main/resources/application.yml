@@ -1,13 +1,5 @@
 spring:
-  profiles:
-    active: dev
   datasource:
-    driver-class-name: ${der.datasource.driver-class-name}
-    url: ${der.datasource.url}
-    username: ${der.datasource.username}
-    password: ${der.datasource.password}
-
-logging:
-  level:
-    org:
-      springframework=DEBUG:
+    url: jdbc:mysql://localhost:3306/sky_take_out
+    username: root
+    password: 123456

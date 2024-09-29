@@ -1,7 +1,7 @@
 package jsu.ljt.javademo.service.ch10;
 
-import jsu.ljt.javademo.pojo.ch10.Order;
-import jsu.ljt.javademo.pojo.ch10.OrderProcessingException;
+import jsu.ljt.javademo.model.ch10.Order;
+import jsu.ljt.javademo.model.ch10.OrderProcessingException;
 import org.springframework.stereotype.Service;
 
 @Service

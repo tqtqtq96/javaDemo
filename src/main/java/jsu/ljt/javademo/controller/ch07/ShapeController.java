@@ -1,8 +1,8 @@
 package jsu.ljt.javademo.controller.ch07;
 
-import jsu.ljt.javademo.pojo.ch07.e03.Circle;
-import jsu.ljt.javademo.pojo.ch07.e03.Rectangle;
-import jsu.ljt.javademo.pojo.ch07.e03.Shape;
+import jsu.ljt.javademo.model.ch07.e03.Circle;
+import jsu.ljt.javademo.model.ch07.e03.Rectangle;
+import jsu.ljt.javademo.model.ch07.e03.Shape;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;

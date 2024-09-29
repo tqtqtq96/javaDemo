@@ -1,7 +1,7 @@
 package jsu.ljt.javademo.controller.ch08;
 
-import jsu.ljt.javademo.pojo.ch08.e04.DatabaseConnection;
-import jsu.ljt.javademo.pojo.ch08.e04.DatabaseConnectionFactory;
+import jsu.ljt.javademo.model.ch08.e04.DatabaseConnection;
+import jsu.ljt.javademo.model.ch08.e04.DatabaseConnectionFactory;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;

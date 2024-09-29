@@ -1,7 +1,7 @@
 package jsu.ljt.javademo.controller.ch02;
 
 
-import jsu.ljt.javademo.pojo.ch02.DataTypeConversion;
+import jsu.ljt.javademo.model.ch02.DataTypeConversion;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;

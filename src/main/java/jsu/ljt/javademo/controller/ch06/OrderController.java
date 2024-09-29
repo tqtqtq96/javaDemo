@@ -1,6 +1,6 @@
 package jsu.ljt.javademo.controller.ch06;
 
-import jsu.ljt.javademo.pojo.ch06.Order;
+import jsu.ljt.javademo.model.ch06.Order;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;

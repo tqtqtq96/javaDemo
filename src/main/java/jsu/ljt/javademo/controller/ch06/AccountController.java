@@ -1,6 +1,6 @@
 package jsu.ljt.javademo.controller.ch06;
 
-import jsu.ljt.javademo.pojo.ch06.Account;
+import jsu.ljt.javademo.model.ch06.Account;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
